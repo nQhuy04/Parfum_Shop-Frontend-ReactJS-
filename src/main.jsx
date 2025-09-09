@@ -1,7 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
-import './styles/global.css'; //import file css
+import './styles/global.css';
+import ProductDetail from './pages/productDetail.jsx';
 
 import {
   createBrowserRouter,
@@ -27,6 +28,11 @@ const router = createBrowserRouter([
       {
         path: "user",
         element: <UserPage />
+      },
+
+      {
+        path: "product/:id", 
+        element: <ProductDetail />
       },
     ]
 
