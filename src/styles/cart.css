@@ -1,0 +1,67 @@
+/* src/styles/cart.css */
+
+.cart-page-container {
+    max-width: 1200px;
+    margin: 80px auto;
+    padding: 0 15px;
+}
+
+.cart-item {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.cart-item-image img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.cart-item-details {
+    flex-grow: 1; /* Cho phép phần này chiếm hết không gian còn lại */
+}
+
+.cart-item-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.remove-button {
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #999;
+    transition: color 0.3s ease;
+}
+
+.remove-button:hover {
+    color: #ff4d4f;
+}
+
+/* === Phần Tóm tắt Đơn hàng === */
+.cart-summary {
+    background-color: var(--color-light);
+    padding: 30px;
+    border-radius: 8px;
+    position: sticky; /* Giữ cố định khi cuộn */
+    top: 100px; /* Cách header 20px (80px header + 20px) */
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    font-size: 1rem;
+}
+
+.summary-total {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+    font-size: 1.2rem;
+    font-weight: bold;
+}

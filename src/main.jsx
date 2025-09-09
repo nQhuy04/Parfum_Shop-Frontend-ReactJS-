@@ -2,8 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './styles/global.css';
-import ProductDetail from './pages/productDetail.jsx';
-import CartPage from './pages/CartPage.jsx';
+import ProductDetailPage from './pages/productDetail.jsx';
+import CartPage from './pages/cart.jsx';
 
 import {
   createBrowserRouter,
@@ -15,6 +15,7 @@ import HomePage from './pages/home.jsx';
 import LoginPage from './pages/login.jsx';
 import { AuthWrapper } from './components/context/auth.context.jsx';
 import { CartWrapper } from './components/context/cart.context.jsx';
+
 
 
 const router = createBrowserRouter([
@@ -34,7 +35,7 @@ const router = createBrowserRouter([
 
       {
         path: "product/:id", 
-        element: <ProductDetail />
+        element: <ProductDetailPage />
       },
 
       {
