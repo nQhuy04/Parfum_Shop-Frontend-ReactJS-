@@ -1,0 +1,55 @@
+/* src/styles/products-page.css */
+
+.products-page-layout {
+    max-width: 1400px;
+    margin: 60px auto;
+    padding: 0 15px;
+}
+
+/* === Sidebar Lọc Sản Phẩm (Bên trái) === */
+.filters-sidebar {
+    /* Giúp sidebar đứng yên khi cuộn trang */
+    position: sticky;
+    top: 100px; /* 80px header + 20px khoảng cách */
+}
+
+.filter-group {
+    margin-bottom: 30px;
+}
+
+.filter-title {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+/* Chỉnh style cho các checkbox thương hiệu/giới tính */
+.brand-list .ant-checkbox-wrapper, .gender-list .ant-checkbox-wrapper {
+    display: block; /* Mỗi checkbox một hàng */
+    margin-left: 0 !important;
+    margin-bottom: 8px;
+}
+
+/* === Khu vực chính (Bên phải) === */
+.products-grid-container {
+    padding-left: 20px;
+}
+
+/* Thanh Sắp xếp và Kết quả */
+.products-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #f0f0f0;
+    border-radius: 4px;
+}
+
+/* Phân trang ở cuối */
+.pagination-container {
+    margin-top: 40px;
+    text-align: center;
+}

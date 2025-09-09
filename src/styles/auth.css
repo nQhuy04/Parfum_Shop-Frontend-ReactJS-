@@ -4,8 +4,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    background-color: var(--color-light); /* Sử dụng màu nền nhạt, ấm cúng */
+    min-height: 80vh;
+    background-color: var(--color-light); 
 }
 
 .auth-container {
