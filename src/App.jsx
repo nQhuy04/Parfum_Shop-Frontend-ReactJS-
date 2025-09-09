@@ -1,26 +1,31 @@
+// src/App.jsx
+
 import { Outlet } from "react-router-dom";
 import Header from "./components/layout/header";
 import { useContext, useEffect } from "react"
 import { AuthContext } from "./components/context/auth.context";
 import { Spin } from "antd";
-import { getAccountApi } from "./ultil/api"; // Import API mới
+import { getAccountApi } from "./ultil/api";
+import Footer from "./components/layout/Footer";
 
 function App() {
-  const { auth, setAuth, appLoading, setAppLoading } = useContext(AuthContext); // Lấy cả auth object
+  const { auth, setAuth, appLoading, setAppLoading } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchAccount = async () => {
-      // Chỉ chạy fetchAccount nếu có token trong localStorage
       if (localStorage.getItem("access_token")) {
         setAppLoading(true);
-        const res = await getAccountApi(); // Sử dụng API mới
-        if (res && res.EC === 0) { // Giả định API trả về EC=0 khi thành công
+        const res = await getAccountApi();
+
+        // === THAY ĐỔI QUAN TRỌNG NẰM Ở ĐÂY ===
+        // Backend của bạn trả về dữ liệu trong `DT`, nên chúng ta cần kiểm tra `res.DT.user`
+        if (res && res.DT && res.DT.user) { 
           setAuth({
             isAuthenticated: true,
             user: {
-              email: res.user.email, // Giả định response có cấu trúc { EC: 0, user: { email, name, role } }
-              name: res.user.name,
-              role: res.user.role // Thêm role vào user object để kiểm tra quyền sau này
+              email: res.DT.user.email, // Lấy từ res.DT.user
+              name: res.DT.user.name,   // Lấy từ res.DT.user
+              role: res.DT.user.role    // Lấy từ res.DT.user
             }
           });
         } else {
@@ -33,13 +38,20 @@ function App() {
         }
         setAppLoading(false);
       } else {
-        // Nếu không có token, không cần loading, đặt appLoading về false ngay
         setAppLoading(false);
       }
     }
-
-    fetchAccount();
-  }, []); // [] để chỉ chạy một lần khi component mount
+    
+    // Thêm một điều kiện nhỏ: chỉ chạy fetchAccount khi chưa đăng nhập.
+    // Điều này giúp tránh việc gọi lại API không cần thiết khi di chuyển giữa các trang.
+    if (!auth.isAuthenticated) {
+        fetchAccount();
+    } else {
+        // Nếu đã đăng nhập rồi thì không cần hiển thị loading nữa
+        setAppLoading(false);
+    }
+    
+  }, [auth.isAuthenticated, setAppLoading, setAuth]); // Thêm dependencies để tuân thủ quy tắc của useEffect
 
   return (
     <div>
@@ -48,15 +60,16 @@ function App() {
           position: "fixed",
           top: "50%",
           left: "50%",
-          transform: "translate(-50%, -50%)", // Sửa lỗi cú pháp CSS
-          zIndex: 9999 // Đảm bảo spinner hiển thị trên cùng
+          transform: "translate(-50%, -50%)",
+          zIndex: 9999
         }}>
-          <Spin size="large" /> {/* Thêm size cho spinner */}
+          <Spin size="large" />
         </div>
         :
         <>
           <Header />
           <Outlet />
+          <Footer />
         </>
       }
     </div>

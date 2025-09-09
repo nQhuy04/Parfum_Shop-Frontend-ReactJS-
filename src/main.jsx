@@ -15,44 +15,35 @@ import HomePage from './pages/home.jsx';
 import LoginPage from './pages/login.jsx';
 import { AuthWrapper } from './components/context/auth.context.jsx';
 import { CartWrapper } from './components/context/cart.context.jsx';
+import AuthLayout from './components/layout/AuthLayout.jsx';
 
 
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />, //Chạy app, và bên trong App có header 
+    element: <App />, 
+    children: [
+      { index: true, element: <HomePage /> },
+      { path: "user", element: <UserPage /> },
+      { path: "product/:id", element: <ProductDetailPage /> },
+      { path: "cart", element: <CartPage /> },
+    ]
+  },
+
+
+  {
+    element: <AuthLayout />, 
     children: [
       {
-        index: true,
-        element: <HomePage />
+        path: "login",
+        element: <LoginPage />
       },
-
       {
-        path: "user",
-        element: <UserPage />
-      },
-
-      {
-        path: "product/:id", 
-        element: <ProductDetailPage />
-      },
-
-      {
-        path: "cart",
-        element: <CartPage />
+        path: "register",
+        element: <RegisterPage />
       },
     ]
-
-  },
-
-  {
-    path: "register",
-    element: <RegisterPage />
-  },
-  {
-    path: "login",
-    element: <LoginPage />
   },
 ]);
 
