@@ -1,106 +1,97 @@
 // src/pages/ProductDetail.jsx
 
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState, useContext } from 'react'; // 1. Thêm useContext
+import { useParams, useNavigate } from 'react-router-dom'; // 2. Thêm useNavigate
 import { Row, Col, Image, Typography, Button, Spin, notification, InputNumber, Tag } from 'antd';
-import { getProductByIdApi } from '../ultil/api';
+import { getProductByIdApi, addToCartApi } from '../ultil/api'; // 3. Thêm addToCartApi
 
-// Import CSS từ trang home để tái sử dụng một số style
+// 4. Import các Context cần thiết
+import { AuthContext } from '../components/context/auth.context';
+import { CartContext } from '../components/context/cart.context';
+
 import '../styles/home.css';
 
 const { Title, Text, Paragraph } = Typography;
 
 const ProductDetail = () => {
-    // 1. Lấy `id` từ thanh địa chỉ URL (ví dụ: /product/abc-123 -> id = "abc-123")
     const { id } = useParams();
+    const navigate = useNavigate(); // Dùng để chuyển hướng
 
-    // 2. Khởi tạo các state
-    const [product, setProduct] = useState(null); // Lưu thông tin sản phẩm chi tiết
-    const [isLoading, setIsLoading] = useState(true); // Quản lý trạng thái loading
-    const [quantity, setQuantity] = useState(1); // Quản lý số lượng sản phẩm muốn mua
+    // 5. Lấy state và function từ các Context
+    const { auth } = useContext(AuthContext);
+    const { fetchCart } = useContext(CartContext); // Lấy hàm fetchCart để refresh giỏ hàng
 
-    // 3. Sử dụng useEffect để gọi API khi component được mount hoặc khi `id` thay đổi
+    const [product, setProduct] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [quantity, setQuantity] = useState(1);
+    const [isAddingToCart, setIsAddingToCart] = useState(false); // State loading cho nút bấm
+
     useEffect(() => {
-        const fetchProductDetail = async () => {
-            setIsLoading(true);
-            try {
-                const res = await getProductByIdApi(id);
-                if (res && res.EC === 0) {
-                    setProduct(res.DT); // Lưu dữ liệu sản phẩm vào state
-                } else {
-                    // Xử lý trường hợp không tìm thấy sản phẩm
-                    notification.error({
-                        message: "Lỗi",
-                        description: "Không tìm thấy sản phẩm này.",
-                    });
-                }
-            } catch (error) {
-                notification.error({
-                    message: "Lỗi hệ thống",
-                    description: "Đã có lỗi xảy ra. Vui lòng thử lại sau."
-                });
-            } finally {
-                setIsLoading(false); // Luôn tắt loading sau khi API hoàn tất
-            }
-        };
-
+        // ... hàm fetchProductDetail giữ nguyên không đổi ...
+        const fetchProductDetail = async () => { /* ... */ };
         fetchProductDetail();
-    }, [id]); // Dependency là `id` -> Nếu id thay đổi, gọi lại API
+    }, [id]);
 
-    // Hiển thị loading spinner trong khi chờ dữ liệu
-    if (isLoading) {
-        return <div style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}><Spin size="large" /></div>;
-    }
+    // === 6. TẠO HÀM XỬ LÝ KHI BẤM NÚT "THÊM VÀO GIỎ" ===
+    const handleAddToCart = async () => {
+        // Kiểm tra xem user đã đăng nhập chưa
+        if (!auth.isAuthenticated) {
+            notification.warning({
+                message: "Bạn chưa đăng nhập",
+                description: "Vui lòng đăng nhập để thực hiện chức năng này."
+            });
+            navigate('/login'); // Chuyển hướng đến trang đăng nhập
+            return;
+        }
 
-    // Hiển thị thông báo nếu không có sản phẩm
-    if (!product) {
-        return <div style={{ textAlign: 'center', padding: '100px 0' }}>Không tìm thấy thông tin sản phẩm.</div>;
-    }
+        setIsAddingToCart(true); // Bật loading
+        try {
+            const res = await addToCartApi(id, quantity);
+            if (res && res.EC === 0) {
+                notification.success({
+                    message: "Thành công",
+                    description: `Đã thêm ${quantity} sản phẩm "${product.name}" vào giỏ hàng.`,
+                });
+                // Sau khi thêm thành công, gọi lại fetchCart để cập nhật state toàn cục
+                await fetchCart();
+            } else {
+                notification.error({
+                    message: "Thất bại",
+                    description: res.EM || "Có lỗi xảy ra, vui lòng thử lại.",
+                });
+            }
+        } catch (error) {
+            notification.error({ message: "Lỗi hệ thống" });
+        } finally {
+            setIsAddingToCart(false); // Tắt loading
+        }
+    };
 
-    // Định dạng giá tiền
+    // ... phần loading và return giao diện ...
+
+    if (isLoading) { /* ... */ }
+    if (!product) { /* ... */ }
     const formattedPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price);
-
-    // 4. Render giao diện
+    
     return (
         <div className="container" style={{ paddingTop: '80px', paddingBottom: '80px' }}>
             <Row gutter={[48, 48]}>
-                {/* Cột bên trái: Hình ảnh sản phẩm */}
+                {/* ... Cột hình ảnh giữ nguyên ... */}
+                <Col xs={24} md={12}>{/* ... */}</Col>
+
+                {/* Cột thông tin chi tiết */}
                 <Col xs={24} md={12}>
-                    <Image
-                        width="100%"
-                        src={product.image}
-                        preview={{ visible: false }}
-                        style={{ borderRadius: '8px', boxShadow: 'var(--box-shadow)' }}
-                    />
-                </Col>
+                    {/* ... các thông tin khác giữ nguyên ... */}
+                    {/* ... Tag, Title, Price, Paragraph, InputNumber ... */}
 
-                {/* Cột bên phải: Thông tin chi tiết */}
-                <Col xs={24} md={12}>
-                    <Tag color="gold" style={{ marginBottom: '16px', textTransform: 'uppercase' }}>
-                        {product.brand}
-                    </Tag>
-                    <Title level={1} style={{ fontFamily: 'var(--font-heading)', marginBottom: '16px' }}>
-                        {product.name}
-                    </Title>
-                    <Title level={2} style={{ color: 'var(--color-primary)', marginBottom: '24px' }}>
-                        {formattedPrice}
-                    </Title>
-                    <Paragraph style={{ lineHeight: 1.7 }}>
-                        {product.description}
-                    </Paragraph>
-
-                    <div style={{ margin: '32px 0' }}>
-                        <Text strong>Số lượng:</Text>
-                        <InputNumber 
-                            min={1} 
-                            max={product.stock} // Số lượng tối đa là số lượng trong kho
-                            defaultValue={1} 
-                            onChange={(value) => setQuantity(value)} 
-                            style={{ marginLeft: '16px' }}
-                        />
-                    </div>
-
-                    <Button type="primary" size="large" style={{ backgroundColor: 'var(--color-dark)', border: 'none' }}>
+                    {/* === 7. CẬP NHẬT LẠI NÚT BẤM === */}
+                    <Button 
+                        type="primary" 
+                        size="large" 
+                        style={{ backgroundColor: 'var(--color-dark)', border: 'none' }}
+                        onClick={handleAddToCart} // Gắn hàm xử lý
+                        loading={isAddingToCart}   // Thêm trạng thái loading
+                    >
                         Thêm vào giỏ hàng
                     </Button>
                     <Text style={{ marginLeft: '24px', fontStyle: 'italic' }}>

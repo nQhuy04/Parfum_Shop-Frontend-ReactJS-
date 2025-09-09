@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './styles/global.css';
 import ProductDetail from './pages/productDetail.jsx';
+import CartPage from './pages/CartPage.jsx';
 
 import {
   createBrowserRouter,
@@ -13,6 +14,7 @@ import UserPage from './pages/user.jsx';
 import HomePage from './pages/home.jsx';
 import LoginPage from './pages/login.jsx';
 import { AuthWrapper } from './components/context/auth.context.jsx';
+import { CartWrapper } from './components/context/cart.context.jsx';
 
 
 const router = createBrowserRouter([
@@ -34,6 +36,11 @@ const router = createBrowserRouter([
         path: "product/:id", 
         element: <ProductDetail />
       },
+
+      {
+        path: "cart",
+        element: <CartPage />
+      },
     ]
 
   },
@@ -52,7 +59,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <AuthWrapper>
-      <RouterProvider router={router} />
+      <CartWrapper> 
+        <RouterProvider router={router} />
+      </CartWrapper>
     </AuthWrapper>
   </React.StrictMode>,
 )

@@ -39,7 +39,37 @@ const getProductByIdApi = (id) => {
     return axios.get(URL_API);
 }
 
+// 1. Thêm sản phẩm vào giỏ (POST /v1/api/cart)
+const addToCartApi = (productId, quantity) => {
+    const URL_API = "/v1/api/cart";
+    const data = {
+        productId: productId,
+        quantity: quantity
+    };
+    return axios.post(URL_API, data);
+}
 
+// 2. Lấy giỏ hàng của user (GET /v1/api/cart)
+const getCartApi = () => {
+    const URL_API = "/v1/api/cart";
+    return axios.get(URL_API);
+}
+
+// 3. Cập nhật số lượng một sản phẩm trong giỏ (PUT /v1/api/cart)
+const updateCartApi = (productId, quantity) => {
+    const URL_API = "/v1/api/cart";
+    const data = {
+        productId: productId,
+        quantity: quantity
+    };
+    return axios.put(URL_API, data);
+}
+
+// 4. Xóa một sản phẩm khỏi giỏ (DELETE /v1/api/cart/:productId)
+const removeItemFromCartApi = (productId) => {
+    const URL_API = `/v1/api/cart/${productId}`;
+    return axios.delete(URL_API);
+}
 
 // Cập nhật lại dòng export
 export {
@@ -47,6 +77,10 @@ export {
     loginApi, 
     getAccountApi, 
     getUsersApi,
-    getProductsApi,     // export hàm mới
-    getProductByIdApi   // export hàm mới
+    getProductsApi,     
+    getProductByIdApi,
+     addToCartApi,
+    getCartApi,
+    updateCartApi,
+    removeItemFromCartApi, 
 }
