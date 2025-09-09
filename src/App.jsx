@@ -1,52 +1,57 @@
 import { Outlet } from "react-router-dom";
 import Header from "./components/layout/header";
-import axios from "./ultil/axios.customize";// thay vì "axios" thì ta trỏ đến file customize, không can thiệp vào cả thư viên axios mà chỉ can thiệp vào 1 đối tượng. lúc này tên biến ta không cần bắt buộc đặt tên là axios mà ta có thể đặt bất cứ tên gì cũng có thể sử dụng được
 import { useContext, useEffect } from "react"
 import { AuthContext } from "./components/context/auth.context";
 import { Spin } from "antd";
+import { getAccountApi } from "./ultil/api"; // Import API mới
 
 function App() {
-
-  const { setAuth, appLoading, setAppLoading } = useContext(AuthContext);
+  const { auth, setAuth, appLoading, setAppLoading } = useContext(AuthContext); // Lấy cả auth object
 
   useEffect(() => {
     const fetchAccount = async () => {
-      setAppLoading(true);
-      //ta sử dụng env của Vite, đẩy tham số môi trường, gọi từ file .env.production
-      const res = await axios.get(`/v1/api/account`);
-      if (res) {
-        setAuth({
-          isAuthenticated: true,
-          user: {
-            email: res.email,
-            name: res.name,
-          }
-        })
+      // Chỉ chạy fetchAccount nếu có token trong localStorage
+      if (localStorage.getItem("access_token")) {
+        setAppLoading(true);
+        const res = await getAccountApi(); // Sử dụng API mới
+        if (res && res.EC === 0) { // Giả định API trả về EC=0 khi thành công
+          setAuth({
+            isAuthenticated: true,
+            user: {
+              email: res.user.email, // Giả định response có cấu trúc { EC: 0, user: { email, name, role } }
+              name: res.user.name,
+              role: res.user.role // Thêm role vào user object để kiểm tra quyền sau này
+            }
+          });
+        } else {
+          // Nếu token không hợp lệ hoặc có lỗi, xóa token và đặt lại trạng thái auth
+          localStorage.removeItem("access_token");
+          setAuth({
+            isAuthenticated: false,
+            user: { email: "", name: "", role: "" }
+          });
+        }
+        setAppLoading(false);
+      } else {
+        // Nếu không có token, không cần loading, đặt appLoading về false ngay
+        setAppLoading(false);
       }
-      setAppLoading(false);
     }
 
+    fetchAccount();
+  }, []); // [] để chỉ chạy một lần khi component mount
 
-    fetchAccount()
-  }, [])
-
-
-
-
-  //Nơi hiển thị giao diện
   return (
     <div>
       {appLoading === true ?
         <div style={{
-
           position: "fixed",
           top: "50%",
           left: "50%",
-          transform: "-webkit-translate(-50%, -50%)",
+          transform: "translate(-50%, -50%)", // Sửa lỗi cú pháp CSS
+          zIndex: 9999 // Đảm bảo spinner hiển thị trên cùng
         }}>
-          <Spin>
-
-          </Spin>
+          <Spin size="large" /> {/* Thêm size cho spinner */}
         </div>
         :
         <>
@@ -54,11 +59,8 @@ function App() {
           <Outlet />
         </>
       }
-
     </div>
-
-
   )
 }
 
-export default App
+export default App;

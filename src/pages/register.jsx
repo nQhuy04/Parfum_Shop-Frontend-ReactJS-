@@ -22,7 +22,7 @@ const RegisterPage = () => {
             })
             navigate("/login");//Chuyển hướng đến trang login khi đăng ký thành công
         }else{
-            otification.error({
+            notification.error({
                 message: "CREATE USER",
                 description: "Error"
             })

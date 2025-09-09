@@ -1,4 +1,27 @@
-*{
-    margin: 0;
-    padding: 0;
+/* src/styles/global.css */
+
+/* === IMPORT FONT & ĐỊNH NGHĨA BIẾN MÀU SẮC === */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@300;400;500&display=swap');
+
+:root {
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'Roboto', sans-serif;
+  --color-text: #333;
+  --color-primary: #c9a96e; /* Màu vàng gold sang trọng */
+  --color-dark: #1a1a1a;
+  --color-light: #f9f9f9;
+  --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+/* === RESET CSS CƠ BẢN === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background-color: #fff;
 }
