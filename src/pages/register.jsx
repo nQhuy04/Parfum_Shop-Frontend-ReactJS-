@@ -1,103 +1,85 @@
-import React from 'react';
-import { Button, Form, Input, notification } from 'antd';
-import { createUserApi } from '../ultil/api';
-import { useNavigate } from 'react-router-dom';
+// src/pages/register.jsx
 
+import React from 'react';
+import { Button, Form, Input, notification, Typography } from 'antd';
+import { Link, useNavigate } from 'react-router-dom';
+import { createUserApi } from '../ultil/api';
+
+// Import file CSS dùng chung
+import '../styles/auth.css';
+
+const { Title, Text } = Typography;
 
 const RegisterPage = () => {
-
     const navigate = useNavigate();
-    const onFinish = async(values) => {
-        //lấy các dữ liệu người dùng đã nhập:
-        const {name, email, password} = values;
 
-        //phản hồi về
+    // === GIỮ NGUYÊN LOGIC XỬ LÝ FORM ===
+    const onFinish = async (values) => {
+        const { name, email, password } = values;
         const res = await createUserApi(name, email, password);
 
-        if(res) {
-            //notification đã có sẵn của antd, đã import ở trên
+        // API của bạn trả về data khi thành công, nên cần check `res.DT`
+        if (res && res.DT) {
             notification.success({
-                message: "CREATE USER",
-                description: "Success"
-            })
-            navigate("/login");//Chuyển hướng đến trang login khi đăng ký thành công
-        }else{
+                message: "Tạo tài khoản thành công!",
+                description: "Vui lòng đăng nhập để tiếp tục."
+            });
+            navigate("/login");
+        } else {
             notification.error({
-                message: "CREATE USER",
-                description: "Error"
-            })
+                message: "Tạo tài khoản thất bại",
+                description: res.EM || "Có lỗi xảy ra, email có thể đã tồn tại."
+            });
         }
-
-        console.log('Success:', res);
     };
 
-
+    // === THAY THẾ GIAO DIỆN MỚI ===
     return (
-        <div style={{ margin: 50 }}>
-            <Form
-                name="basic"
-                labelCol={{
-                    span: 8,
-                }}
-                wrapperCol={{
-                    span: 16,
-                }}
-                style={{
-                    maxWidth: 600,
-                }}
-
-                onFinish={onFinish}
-                autoComplete="off"
-                layout = 'vertical'//để theo chiều dọc
-            >
-                <Form.Item
-                    label="Email"
-                    name="email"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Please input your email!',
-                        },
-                    ]}
+        <div className="auth-page-wrapper">
+            <div className="auth-container">
+                <Title className="auth-title">Tạo tài khoản</Title>
+                <Form
+                    name="register-form"
+                    onFinish={onFinish}
+                    layout="vertical"
+                    autoComplete="off"
                 >
-                    <Input />
-                </Form.Item>
-                <Form.Item
-                    label="Password"
-                    name="password"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Please input your password!',
-                        },
-                    ]}
-                >
-                    <Input.Password />
-                </Form.Item>
+                    <Form.Item
+                        label="Họ và tên"
+                        name="name"
+                        rules={[{ required: true, message: 'Vui lòng nhập họ tên!' }]}
+                    >
+                        <Input />
+                    </Form.Item>
 
-                <Form.Item
-                    label="Name"
-                    name="name"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Please input your name!',
-                        },
-                    ]}
-                >
-                    <Input />
-                </Form.Item>
+                    <Form.Item
+                        label="Email"
+                        name="email"
+                        rules={[{ required: true, message: 'Vui lòng nhập email!' }, {type: 'email', message: 'Email không hợp lệ!'}]}
+                    >
+                        <Input />
+                    </Form.Item>
 
-
-                <Form.Item>
-                    <Button type="primary" htmlType="submit">
-                        Submit
-                    </Button>
-                </Form.Item>
-            </Form>
+                    <Form.Item
+                        label="Mật khẩu"
+                        name="password"
+                        rules={[{ required: true, message: 'Vui lòng nhập mật khẩu!' }]}
+                    >
+                        <Input.Password />
+                    </Form.Item>
+                    
+                    <Form.Item>
+                        <Button type="primary" htmlType="submit" className="auth-button">
+                            Đăng ký
+                        </Button>
+                    </Form.Item>
+                </Form>
+                <div className="auth-switch-link">
+                    <Text>Đã có tài khoản? <Link to="/login">Đăng nhập</Link></Text>
+                </div>
+            </div>
         </div>
-
-    )
+    );
 }
 
-export default RegisterPage
+export default RegisterPage;

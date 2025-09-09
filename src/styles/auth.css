@@ -1,0 +1,61 @@
+/* src/styles/auth.css */
+
+.auth-page-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: var(--color-light); /* Sử dụng màu nền nhạt, ấm cúng */
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 450px;
+    padding: 40px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: var(--box-shadow); /* Sử dụng bóng đổ đã định nghĩa */
+}
+
+.auth-title {
+    font-family: var(--font-heading); /* Font tiêu đề sang trọng */
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 30px;
+    color: var(--color-dark);
+}
+
+/* Chỉnh sửa lại các label của Form */
+.auth-container .ant-form-item-label > label {
+    font-weight: 500;
+    color: var(--color-text);
+}
+
+/* Nút bấm chính */
+.auth-button {
+    background-color: var(--color-dark) !important; /* Dùng màu tối chủ đạo */
+    border-color: var(--color-dark) !important;
+    height: 45px;
+    font-size: 1rem;
+    font-weight: 500;
+    width: 100%; /* Nút bấm full-width */
+}
+
+.auth-button:hover {
+     background-color: #333 !important; /* Hiệu ứng hover tối hơn một chút */
+     border-color: #333 !important;
+}
+
+/* Link để chuyển đổi giữa Đăng nhập/Đăng ký */
+.auth-switch-link {
+    margin-top: 20px;
+    text-align: center;
+}
+.auth-switch-link a {
+    color: var(--color-primary); /* Màu vàng gold cho link */
+    font-weight: 500;
+    text-decoration: none;
+}
+.auth-switch-link a:hover {
+    text-decoration: underline;
+}
