@@ -9,20 +9,16 @@
     padding-right: 15px;
 }
 
-/* === CAROUSEL BANNER (THAY THẾ CHO HERO BANNER CŨ) === */
+/* === CAROUSEL BANNER === */
 .hero-carousel {
     position: relative;
     height: 65vh;
 }
-
-/* Style cho từng ảnh trong slide */
 .carousel-image {
     width: 100%;
     height: 65vh;
     object-fit: cover;
 }
-
-/* Lớp phủ chứa text và nút bấm */
 .hero-content-overlay {
     position: absolute;
     top: 50%;
@@ -33,16 +29,13 @@
     text-align: center;
     padding: 0 20px;
     color: #ffffff;
-    /* Thêm một lớp nền mờ ảo nhẹ để chữ nổi bật hơn */
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
-
 .hero-title {
     font-family: var(--font-heading);
     font-size: 4rem;
     margin-bottom: 20px;
 }
-
 .hero-subtitle {
     font-size: 1.2rem;
     margin-bottom: 30px;
@@ -50,11 +43,50 @@
     margin-left: auto;
     margin-right: auto;
 }
+.hero-button.ant-btn {
+    background-color: #ffffff !important;
+    border-color: #ffffff !important;
+    color: var(--color-dark) !important; 
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+.hero-button.ant-btn:hover {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    transform: scale(1.05); 
+}
+.hero-carousel .slick-arrow {
+    background: rgba(255, 255, 255, 0.5); 
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    z-index: 20;
+    transition: background-color 0.3s ease;
+    display: flex !important; 
+    align-items: center;
+    justify-content: center;
+}
+.hero-carousel .slick-arrow:hover {
+    background: rgba(255, 255, 255, 0.8);
+}
+.hero-carousel .slick-arrow::before {
+    content: '' !important; 
+}
+.hero-carousel .slick-arrow .anticon {
+    font-size: 1.2rem;
+    color: var(--color-dark);
+}
+.hero-carousel .slick-prev {
+    left: 25px;
+}
+.hero-carousel .slick-next {
+    right: 25px;
+}
 
-
-/* === SECTION TIÊU ĐỀ (Giữ nguyên) === */
+/* === SECTION CHUNG === */
+/* Thêm padding-bottom để tạo khoảng cách với phần tử bên dưới (bao gồm cả footer) */
 .section {
     padding-top: 80px;
+    padding-bottom: 80px; 
 }
 
 .section-title {
@@ -78,49 +110,72 @@
 }
 
 
-/* === DÁN VÀO CUỐI FILE home.css === */
+/* === CÁC SECTION MỚI === */
 
-/* NÚT BẤM NỔI BẬT HƠN */
-.hero-button.ant-btn {
-    background-color: #ffffff !important;
-    border-color: #ffffff !important;
-    color: var(--color-dark) !important; 
+/* --- 1. Section Bộ sưu tập (Nam, Nữ, Unisex) --- */
+.collections-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* responsive hơn */
+    gap: 30px;
+}
+
+.collection-card {
+    position: relative;
+    overflow: hidden;
+    height: 450px;
+    border-radius: 8px; /* Bo góc nhẹ */
+}
+
+.collection-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.collection-card:hover img {
+    transform: scale(1.05);
+}
+
+.collection-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 30px;
+    text-align: center;
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+    color: #fff;
+}
+
+.collection-title {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+}
+
+/* --- 2. Section Sản phẩm Nổi bật (Featured Products) --- */
+.featured-tabs {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.featured-tabs .ant-radio-button-wrapper {
+    background-color: transparent;
+    border: none !important;
+    font-size: 1.1rem;
+    color: #888;
+    padding: 0 20px;
+    height: auto;
+    line-height: normal;
+    transition: color 0.3s;
+}
+
+.featured-tabs .ant-radio-button-wrapper-checked {
+    color: var(--color-dark) !important;
     font-weight: 500;
-    transition: all 0.3s ease;
 }
 
-.hero-button.ant-btn:hover {
-    background-color: rgba(255, 255, 255, 0.9) !important;
-    transform: scale(1.05); 
-}
-
-/* MŨI TÊN ĐIỀU HƯỚNG CHO CAROUSEL */
-.hero-carousel .slick-arrow {
-    background: rgba(255, 255, 255, 0.5); 
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    z-index: 20;
-    transition: background-color 0.3s ease;
-    display: flex !important; 
-    align-items: center;
-    justify-content: center;
-}
-.hero-carousel .slick-arrow:hover {
-    background: rgba(255, 255, 255, 0.8);
-}
-.hero-carousel .slick-arrow::before {
-    content: '' !important; 
-}
-
-.hero-carousel .slick-arrow .anticon {
-    font-size: 1.2rem;
-    color: var(--color-dark);
-}
-
-.hero-carousel .slick-prev {
-    left: 25px;
-}
-.hero-carousel .slick-next {
-    right: 25px;
+.featured-tabs .ant-radio-button-wrapper:not(:first-child)::before {
+    display: none;
 }

@@ -8,6 +8,7 @@ import LoadingOverlay from "./components/common/LoadingOverlay";
 import { AuthContext } from "./components/context/auth.context";
 import { LoadingContext } from "./components/context/loading.context";
 import { getAccountApi } from "./ultil/api";
+import './styles/layout.css';
 
 function App() {
   // 1. Chỉ lấy `auth` và `setAuth` từ AuthContext
@@ -47,14 +48,15 @@ function App() {
   }, [auth.isAuthenticated, setAuth, showLoading, hideLoading]);
 
   return (
-    <div>
-      {/* 3. Component LoadingOverlay đã được kết nối với `isLoading` từ context */}
+    <div className="app-container">
       <LoadingOverlay isLoading={isLoading} />
-      <>
-        <Header />
+      <Header />
+    
+      <main className="main-content">
         <Outlet />
-        <Footer />
-      </>
+      </main>
+      
+      <Footer />
     </div>
   );
 }

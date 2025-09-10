@@ -10,6 +10,7 @@ import './styles/global.css';
 // === LAYOUT COMPONENTS ===
 import App from './App.jsx';
 import AuthLayout from './components/layout/AuthLayout.jsx';
+import PageLoader from './components/common/PageLoader';
 
 // === CONTEXT WRAPPERS ===
 import { AuthWrapper } from './components/context/auth.context.jsx';
@@ -24,6 +25,9 @@ import ProductDetailPage from './pages/productDetail.jsx';
 import CartPage from './pages/cart.jsx';
 import ProductsPage from './pages/ProductPage.jsx';
 import { LoadingContext, LoadingWrapper } from './components/context/loading.context.jsx';
+import CheckoutPage from './pages/CheckoutPage.jsx';
+import OrderHistoryPage from './pages/OrderHistoryPage.jsx';
+
 
 // --- Cấu hình Router ---
 const router = createBrowserRouter([
@@ -37,6 +41,9 @@ const router = createBrowserRouter([
       { path: "product/:id", element: <ProductDetailPage /> },
       { path: "cart", element: <CartPage /> },
       { path: "products", element: <ProductsPage /> },
+      { path: "checkout", element: <PageLoader><CheckoutPage /></PageLoader> },
+      { path: "user/orders", element: <PageLoader><OrderHistoryPage /></PageLoader>},
+
     ]
   },
  

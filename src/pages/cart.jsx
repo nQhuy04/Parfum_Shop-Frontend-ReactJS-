@@ -13,7 +13,7 @@ const { Title, Text } = Typography;
 const CartPage = () => {
     // 1. Lấy dữ liệu và hàm từ CartContext
     const { cartItems, fetchCart } = useContext(CartContext);
-    
+
     // State để quản lý trạng thái loading khi cập nhật/xóa
     const [updatingItemId, setUpdatingItemId] = useState(null);
 
@@ -48,16 +48,16 @@ const CartPage = () => {
             setUpdatingItemId(null);
         }
     };
-    
+
     // 4. Tính tổng tiền
     const totalPrice = cartItems.reduce((total, item) => {
         return total + (item.product.price * item.quantity);
     }, 0);
-    
+
     // Định dạng tiền tệ
     const formattedTotalPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalPrice);
     const formatPrice = (price) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
-    
+
     // 5. Render giao diện
     // Xử lý trường hợp giỏ hàng rỗng
     if (cartItems.length === 0) {
@@ -100,7 +100,7 @@ const CartPage = () => {
                                     okText="Xóa"
                                     cancelText="Hủy"
                                 >
-                                    <DeleteOutlined className="remove-button"/>
+                                    <DeleteOutlined className="remove-button" />
                                 </Popconfirm>
                             </div>
                         </div>
@@ -123,9 +123,11 @@ const CartPage = () => {
                             <Text>Tổng cộng</Text>
                             <Text>{formattedTotalPrice}</Text>
                         </div>
-                        <Button type="primary" size="large" block style={{ marginTop: '20px' }}>
-                            Tiến hành thanh toán
-                        </Button>
+                        <Link to="/checkout">
+                            <Button type="primary" size="large" block style={{ marginTop: '20px' }}>
+                                Tiến hành thanh toán
+                            </Button>
+                        </Link>
                     </div>
                 </Col>
             </Row>

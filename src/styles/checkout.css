@@ -1,0 +1,55 @@
+/* src/styles/checkout.css */
+
+.checkout-page-container {
+    max-width: 1200px;
+    margin: 60px auto;
+    padding: 0 15px;
+}
+
+.checkout-form {
+    background-color: #fff;
+    padding: 30px;
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+}
+
+.checkout-summary {
+    background-color: var(--color-light);
+    padding: 30px;
+    border-radius: 8px;
+    position: sticky;
+    top: 100px;
+}
+
+.summary-product-list {
+    max-height: 300px; /* Giới hạn chiều cao nếu nhiều sản phẩm */
+    overflow-y: auto; /* Thêm thanh cuộn */
+    margin-bottom: 20px;
+}
+
+.summary-product-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+}
+
+.summary-product-details {
+    flex-grow: 1;
+}
+
+.summary-divider {
+    margin: 20px 0;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.summary-total {
+    font-size: 1.2rem;
+    font-weight: bold;
+}

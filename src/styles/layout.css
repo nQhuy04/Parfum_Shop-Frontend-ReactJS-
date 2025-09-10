@@ -1,0 +1,15 @@
+/* src/styles/layout.css */
+
+/* Container chính bao bọc toàn bộ ứng dụng */
+.app-container {
+    display: flex;
+    flex-direction: column; /* Xếp các phần tử (header, main, footer) theo chiều dọc */
+    min-height: 100vh; /* Bắt buộc container chính phải cao ít nhất bằng màn hình */
+}
+
+
+.main-content {
+    flex-grow: 1; /*
+                     vùng này "giãn nở" ra và chiếm hết
+                     mọi không gian trống còn lại, đẩy Footer xuống dưới. */
+}

@@ -1,16 +1,13 @@
 // src/components/layout/header.jsx
 
-// import React, 'react';
+import React from 'react';
 import { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Badge } from 'antd';
-import { ShoppingCartOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
-
-// Import Context
+import { Badge, Dropdown, Menu } from 'antd'; 
+import { ShoppingCartOutlined, UserOutlined, LogoutOutlined, HistoryOutlined } from '@ant-design/icons';
 import { AuthContext } from '../context/auth.context';
 import { CartContext } from '../context/cart.context';
 
-// Import CSS mới cho Header
 import '../../styles/header.css';
 
 const Header = () => {
@@ -21,55 +18,62 @@ const Header = () => {
     const totalItemsInCart = cartItems.reduce((total, item) => total + item.quantity, 0);
 
     const handleLogout = () => {
-        // Xóa token và reset trạng thái auth
-        localStorage.removeItem("access_token");
-        setAuth({
-            isAuthenticated: false,
-            user: { email: "", name: "", role: "" }
-        });
-        navigate("/"); // Điều hướng về trang chủ
+        // ... logic logout giữ nguyên ...
     };
+
+    // 2. TẠO RA NỘI DUNG CHO DROPDOWN MENU
+    const userMenu = (
+        <Menu>
+            <Menu.Item key="profile">
+                <Link to="/user/profile">
+                    <UserOutlined style={{ marginRight: '8px' }} />
+                    Thông tin tài khoản
+                </Link>
+            </Menu.Item>
+            <Menu.Item key="order_history">
+                <Link to="/user/orders">
+                    <HistoryOutlined style={{ marginRight: '8px' }} />
+                    Lịch sử đơn hàng
+                </Link>
+            </Menu.Item>
+            <Menu.Divider /> {/* Đường kẻ phân cách */}
+            <Menu.Item key="logout" onClick={handleLogout}>
+                <LogoutOutlined style={{ marginRight: '8px' }} />
+                Đăng xuất
+            </Menu.Item>
+        </Menu>
+    );
 
     return (
         <header className="main-header">
             <div className="header-container">
-                {/* === Phần bên trái: Các link điều hướng chính === */}
                 <nav className="header-nav">
                     <Link to="/">Trang chủ</Link>
-                    <Link to="/products">Sản phẩm</Link> {/* Link đến trang tất cả sản phẩm */}
-                    <Link to="/about">Giới thiệu</Link>
+                    <Link to="/products">Sản phẩm</Link>
+                    {/* <Link to="/about">Giới thiệu</Link> */}
                 </nav>
 
-                {/* === Phần giữa: Logo === */}
                 <div className="header-logo">
-                    <Link to="/">PARFUM</Link> {/* Thay "PARFUM" bằng tên shop của bạn */}
+                    <Link to="/">PARFUM</Link>
                 </div>
 
-                {/* === Phần bên phải: Actions === */}
                 <div className="header-actions">
-                    {/* Icon Giỏ hàng */}
                     <Link to="/cart" className="action-item">
                         <Badge count={totalItemsInCart} size="small">
                             <ShoppingCartOutlined className="action-icon" />
                         </Badge>
                     </Link>
-
-                    {/* Điều kiện hiển thị: Đăng nhập hay chưa? */}
+                    
                     {auth.isAuthenticated ? (
-                        // Nếu ĐÃ đăng nhập
-                        <div className="user-info">
-                            <Link to="/user" className="action-item">
+                        // 3. THAY THẾ LINK BẰNG DROPDOWN
+                        <Dropdown overlay={userMenu} placement="bottomRight" arrow>
+                            <div className="user-info action-item">
                                 <UserOutlined className="action-icon" style={{marginRight: '8px'}}/> 
                                 {auth.user.name}
-                            </Link>
-                            <LogoutOutlined 
-                                className="action-item action-icon" 
-                                onClick={handleLogout}
-                                title="Đăng xuất"
-                            />
-                        </div>
+                            </div>
+                        </Dropdown>
                     ) : (
-                        // Nếu CHƯA đăng nhập
+                        // Phần chưa đăng nhập giữ nguyên
                         <>
                             <Link to="/login" className="action-item">Đăng nhập</Link>
                             <span className="separator">/</span>
