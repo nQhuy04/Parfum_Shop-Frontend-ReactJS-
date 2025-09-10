@@ -1,0 +1,31 @@
+/* src/styles/admin-layout.css */
+.admin-layout .ant-layout-sider {
+    /* Giữ sidebar cố định khi cuộn */
+    overflow: auto;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+}
+.admin-layout .admin-header {
+    padding: 0 24px;
+    background: #fff;
+}
+.admin-layout .ant-layout-content {
+    /* Thêm padding 200px bên trái để không bị sidebar che mất */
+    margin-left: 200px; 
+    padding: 24px;
+    min-height: calc(100vh - 64px); /* Chiều cao tối thiểu = chiều cao màn hình - chiều cao header */
+}
+.admin-logo {
+    height: 32px;
+    margin: 16px;
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+}

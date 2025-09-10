@@ -11,10 +11,13 @@ import './styles/global.css';
 import App from './App.jsx';
 import AuthLayout from './components/layout/AuthLayout.jsx';
 import PageLoader from './components/common/PageLoader';
+import AdminLayout from './components/layout/AdminLayout.jsx'; 
+import AdminRoute from './routes/AdminRoute.jsx';  
 
 // === CONTEXT WRAPPERS ===
 import { AuthWrapper } from './components/context/auth.context.jsx';
 import { CartWrapper } from './components/context/cart.context.jsx';
+import { LoadingWrapper } from './components/context/loading.context.jsx';
 
 // === PAGE COMPONENTS ===
 import HomePage from './pages/home.jsx';
@@ -24,31 +27,40 @@ import UserPage from './pages/user.jsx';
 import ProductDetailPage from './pages/productDetail.jsx';
 import CartPage from './pages/cart.jsx';
 import ProductsPage from './pages/ProductPage.jsx';
-import { LoadingContext, LoadingWrapper } from './components/context/loading.context.jsx';
 import CheckoutPage from './pages/CheckoutPage.jsx';
 import OrderHistoryPage from './pages/OrderHistoryPage.jsx';
 import UserProfilePage from './pages/UserProfilePage.jsx';
 
 
+const AdminDashboard = () => <div><h2>Chào mừng đến với Trang quản trị</h2><p>Chọn một mục từ sidebar để bắt đầu.</p></div>;
+const AdminProductsManager = () => <div>Trang Quản lý Sản phẩm</div>;
+const AdminOrdersManager = () => <div>Trang Quản lý Đơn hàng</div>;
+
+
 // --- Cấu hình Router ---
 const router = createBrowserRouter([
-  // Layout chính
+  // Layout chính của Khách hàng
   {
     path: "/",
     element: <App />,
     children: [
-      { index: true, element: <HomePage /> },
-      { path: "user", element: <UserPage /> },
-      { path: "product/:id", element: <ProductDetailPage /> },
-      { path: "cart", element: <CartPage /> },
-      { path: "products", element: <ProductsPage /> },
+      { index: true, element: <PageLoader><HomePage /></PageLoader> },
+      { path: "products", element: <PageLoader><ProductsPage /></PageLoader> },
+      { path: "product/:id", element: <PageLoader><ProductDetailPage /></PageLoader> },
+      { path: "cart", element: <PageLoader><CartPage /></PageLoader> },
       { path: "checkout", element: <PageLoader><CheckoutPage /></PageLoader> },
-      { path: "user/orders", element: <PageLoader><OrderHistoryPage /></PageLoader>},
-      { path: "user/profile", element: <PageLoader><UserProfilePage /></PageLoader> },
-
+      // Nhóm các trang cá nhân
+      {
+        path: "user",
+        children: [
+          { path: "profile", element: <PageLoader><UserProfilePage /></PageLoader> },
+          { path: "orders", element: <PageLoader><OrderHistoryPage /></PageLoader> }
+        ]
+      }
     ]
   },
  
+  // Layout cho trang Đăng nhập / Đăng ký
   {
     element: <AuthLayout />,
     children: [
@@ -56,6 +68,18 @@ const router = createBrowserRouter([
       { path: "register", element: <RegisterPage /> },
     ]
   },
+
+  // === NHÓM ROUTE DÀNH RIÊNG CHO ADMIN ===
+  {
+    path: "/admin",
+    element: <AdminRoute><AdminLayout /></AdminRoute>,
+    children: [
+      { index: true, element: <AdminDashboard /> },
+      { path: "users", element: <UserPage /> }, // Tái sử dụng UserPage cho quản lý user
+      { path: "products", element: <AdminProductsManager /> },
+      { path: "orders", element: <AdminOrdersManager /> },
+    ]
+  }
 ]);
 
 
