@@ -23,17 +23,17 @@ import { LoadingWrapper } from './components/context/loading.context.jsx';
 import HomePage from './pages/home.jsx';
 import LoginPage from './pages/login.jsx';
 import RegisterPage from './pages/register.jsx';
-import UserPage from './pages/user.jsx';
+import UserPage from './pages/admin/user.jsx';
 import ProductDetailPage from './pages/productDetail.jsx';
 import CartPage from './pages/cart.jsx';
 import ProductsPage from './pages/ProductPage.jsx';
 import CheckoutPage from './pages/CheckoutPage.jsx';
 import OrderHistoryPage from './pages/OrderHistoryPage.jsx';
 import UserProfilePage from './pages/UserProfilePage.jsx';
+import AdminProductsManager from './pages/admin/AdminProductsManager.jsx';
 
-
+// Tạm thời tạo các component rỗng còn lại
 const AdminDashboard = () => <div><h2>Chào mừng đến với Trang quản trị</h2><p>Chọn một mục từ sidebar để bắt đầu.</p></div>;
-const AdminProductsManager = () => <div>Trang Quản lý Sản phẩm</div>;
 const AdminOrdersManager = () => <div>Trang Quản lý Đơn hàng</div>;
 
 
@@ -49,7 +49,6 @@ const router = createBrowserRouter([
       { path: "product/:id", element: <PageLoader><ProductDetailPage /></PageLoader> },
       { path: "cart", element: <PageLoader><CartPage /></PageLoader> },
       { path: "checkout", element: <PageLoader><CheckoutPage /></PageLoader> },
-      // Nhóm các trang cá nhân
       {
         path: "user",
         children: [
@@ -69,14 +68,14 @@ const router = createBrowserRouter([
     ]
   },
 
-  // === NHÓM ROUTE DÀNH RIÊNG CHO ADMIN ===
+  // === NHÓM ROUTE DÀNH RIÊNG CHO ADMIN ĐÃ CẬP NHẬT ===
   {
     path: "/admin",
     element: <AdminRoute><AdminLayout /></AdminRoute>,
     children: [
       { index: true, element: <AdminDashboard /> },
-      { path: "users", element: <UserPage /> }, // Tái sử dụng UserPage cho quản lý user
-      { path: "products", element: <AdminProductsManager /> },
+      { path: "users", element: <UserPage /> }, // `UserPage` đã được import từ đúng thư mục `admin`
+      { path: "products", element: <AdminProductsManager /> }, // Sử dụng component thật
       { path: "orders", element: <AdminOrdersManager /> },
     ]
   }

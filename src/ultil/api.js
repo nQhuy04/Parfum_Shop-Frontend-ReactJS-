@@ -95,6 +95,33 @@ const updateProfileApi = (data) => {
 }
 
 
+// === API DÙNG CHO ADMIN QUẢN LÝ SẢN PHẨM ===
+
+// Thêm sản phẩm mới (POST /v1/api/products)
+const createProductApi = (productData) => {
+    const URL_API = "/v1/api/products";
+    return axios.post(URL_API, productData);
+}
+
+// Cập nhật sản phẩm (PUT /v1/api/products/:id)
+const updateProductApi = (productId, productData) => {
+    const URL_API = `/v1/api/products/${productId}`;
+    return axios.put(URL_API, productData);
+}
+
+// Xóa sản phẩm (DELETE /v1/api/products/:id)
+const deleteProductApi = (productId) => {
+    const URL_API = `/v1/api/products/${productId}`;
+    return axios.delete(URL_API);
+}
+
+
+const deleteUserApi = (userId) => {
+    const URL_API = `/v1/api/users/${userId}`;
+    return axios.delete(URL_API);
+}
+
+
 // Cập nhật lại dòng export
 export {
     createUserApi, 
@@ -110,4 +137,8 @@ export {
     createOrderApi,
     getMyOrdersApi,
     updateProfileApi,
+    createProductApi,
+    updateProductApi,
+    deleteProductApi,
+    deleteUserApi,
 }

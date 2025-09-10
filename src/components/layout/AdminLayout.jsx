@@ -1,42 +1,50 @@
 // src/components/layout/AdminLayout.jsx
-import React, { useContext } from 'react';
+
+import React, { useContext, useState } from 'react'; // Thêm useState
 import { Layout, Menu } from 'antd';
 import { UserOutlined, AppstoreOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { Link, Outlet } from 'react-router-dom';
-import '../../styles/admin-layout.css';
 import { AuthContext } from '../context/auth.context';
+import '../../styles/admin-layout.css';
 
 const { Header, Content, Sider } = Layout;
 
 const AdminLayout = () => {
     const { auth } = useContext(AuthContext);
+    const [collapsed, setCollapsed] = useState(false); // State để quản lý sidebar
 
     const menuItems = [
-        { key: 'dashboard', icon: <AppstoreOutlined />, label: <Link to="/admin">Dashboard</Link> },
         { key: 'users', icon: <UserOutlined />, label: <Link to="/admin/users">Quản lý Người dùng</Link> },
         { key: 'products', icon: <AppstoreOutlined />, label: <Link to="/admin/products">Quản lý Sản phẩm</Link> },
         { key: 'orders', icon: <ShoppingCartOutlined />, label: <Link to="/admin/orders">Quản lý Đơn hàng</Link> },
     ];
 
     return (
-        <Layout className="admin-layout" style={{ minHeight: '100vh' }}>
-            <Sider collapsible>
-                <div className="admin-logo">PARFUM</div>
-                <Menu theme="dark" mode="inline" defaultSelectedKeys={['dashboard']} items={menuItems} />
+        // Layout ngoài cùng là container chính
+        <Layout style={{ minHeight: '100vh' }}>
+            
+            <Sider 
+                className="admin-layout-sider"
+                collapsible 
+                collapsed={collapsed}
+                onCollapse={(value) => setCollapsed(value)}
+            >
+                <div className="admin-logo">P</div>
+                <Menu theme="dark" mode="inline" defaultSelectedKeys={['users']} items={menuItems} />
             </Sider>
-            <Layout>
+
+            <Layout className={`admin-layout-right ${collapsed ? 'sider-collapsed' : ''}`}>
                 <Header className="admin-header">
-                    <div style={{ textAlign: 'right', color: '#333' }}>
-                        <span>Xin chào, <strong>{auth.user.name}</strong></span>
-                    </div>
+                    <span className="admin-welcome-text">Xin chào, <strong>{auth.user.name}</strong></span>
                 </Header>
-                <Content style={{ margin: '24px 16px 0' }}>
-                    <div style={{ padding: 24, minHeight: 360, background: '#fff', borderRadius: '8px' }}>
-                        {/* Các trang con của Admin sẽ được render ở đây */}
+                <Content className="admin-content">
+                    {/* Thẻ div này sẽ là box trắng bên trong */}
+                    <div className="admin-content-box">
                         <Outlet />
                     </div>
                 </Content>
             </Layout>
+
         </Layout>
     );
 };

@@ -1,31 +1,68 @@
 /* src/styles/admin-layout.css */
-.admin-layout .ant-layout-sider {
-    /* Giữ sidebar cố định khi cuộn */
+
+/* --- Sider (Thanh bên trái) --- */
+.admin-layout-sider {
     overflow: auto;
     height: 100vh;
-    position: fixed;
+    position: fixed !important; /* Thêm !important để chắc chắn ghi đè */
     left: 0;
     top: 0;
     bottom: 0;
+    z-index: 10;
 }
-.admin-layout .admin-header {
+
+/* --- Layout chính (Bên phải) --- */
+.admin-layout-right {
+    margin-left: 200px;
+    transition: margin-left 0.2s;
+    background-color: #f0f2f5; /* Màu nền cho toàn bộ khu vực bên phải */
+}
+
+/* Xử lý khi sidebar thu gọn */
+.admin-layout-right.sider-collapsed {
+    margin-left: 80px;
+}
+
+/* Header bên trong layout phải */
+.admin-header {
     padding: 0 24px;
-    background: #fff;
+    background: #fff; /* Nền trắng */
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 }
-.admin-layout .ant-layout-content {
-    /* Thêm padding 200px bên trái để không bị sidebar che mất */
-    margin-left: 200px; 
+
+.admin-welcome-text {
+    color: var(--color-dark);
+    font-size: 1rem;
+}
+
+/* Content bên trong layout phải */
+.admin-content {
+    /* Xóa padding ở đây để phần con tự quản lý */
+    margin: 24px 16px; /* Thay padding bằng margin */
+    min-height: calc(100vh - 64px - 48px); /* vh - header - margin */
+}
+
+/* Box trắng chứa nội dung chính */
+.admin-content-box {
     padding: 24px;
-    min-height: calc(100vh - 64px); /* Chiều cao tối thiểu = chiều cao màn hình - chiều cao header */
+    background: #fff;
+    border-radius: 8px;
+    min-height: 100%;
 }
+
+
+/* Logo trên Sider */
 .admin-logo {
     height: 32px;
     margin: 16px;
-    background: rgba(255, 255, 255, 0.2);
     color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: var(--font-heading);
     font-size: 1.2rem;
+    font-weight: bold;
 }
