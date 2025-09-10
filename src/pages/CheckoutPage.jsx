@@ -14,57 +14,65 @@ const { Title, Text } = Typography;
 const CheckoutPage = () => {
     const navigate = useNavigate();
     const { auth } = useContext(AuthContext);
-    const { cartItems, fetchCart } = useContext(CartContext);
+    const { cartItems, fetchCart, clearCartOnClient } = useContext(CartContext);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [form] = Form.useForm();
 
     useEffect(() => {
-        // Nếu không có sản phẩm nào trong giỏ hàng (sau khi đã fetch), chuyển hướng
-        // Kiểm tra sau một khoảng trễ nhỏ để đảm bảo cartItems đã kịp cập nhật
+        // Logic kiểm tra giỏ hàng rỗng giữ nguyên, nó đã rất tốt
         setTimeout(() => {
             if (cartItems.length === 0) {
-                notification.warning({
-                    message: "Giỏ hàng rỗng",
-                    description: "Vui lòng thêm sản phẩm vào giỏ trước khi thanh toán.",
-                });
+                notification.warning({ /* ... */ });
                 navigate('/cart');
             }
-        }, 100); // 100ms delay
+        }, 100);
     }, [cartItems, navigate]);
 
     // Xử lý khi nhấn nút Đặt hàng
     const onFinish = async (formValues) => {
+        // Ngăn người dùng bấm nhiều lần
+        if (isSubmitting) return; 
+
         setIsSubmitting(true);
+
+        // Gói vào một khối try/catch duy nhất để xử lý
         try {
-            // === LOGIC MỚI ===
-
-            // 1. Tách `email` ra (không cần gửi email trong shippingAddress)
             const { name, phone, address } = formValues;
-            
-            // 2. Tạo object shippingAddress đúng chuẩn
             const shippingAddress = { name, phone, address };
-
             const orderItems = cartItems.map(item => ({
                 product: item.product._id,
                 quantity: item.quantity
             }));
-            
-            // 3. Gửi đi shippingAddress và orderItems
+
             const res = await createOrderApi(shippingAddress, orderItems);
 
             if (res && res.EC === 0) {
-                 // ... logic sau khi thành công giữ nguyên ...
-                 navigate('/');
+                // === LOGIC XỬ LÝ THÀNH CÔNG MỚI ===
+                notification.success({
+                    message: "Đặt hàng thành công!",
+                    description: "Cảm ơn bạn đã mua sắm. Chúng tôi sẽ xử lý đơn hàng sớm nhất.",
+                });
+
+                // 1. Tự làm rỗng giỏ hàng ở phía client ngay lập tức
+                clearCartOnClient();
+
+                // 2. Chuyển hướng về trang chủ
+                navigate('/');
+
             } else {
+                // Nếu API trả về lỗi nghiệp vụ (ví dụ: hết hàng)
                 notification.error({ message: res.EM || "Đặt hàng thất bại, vui lòng thử lại." });
+                setIsSubmitting(false); // Cho phép người dùng thử lại
             }
+
         } catch (error) {
-             notification.error({ message: "Đã có lỗi xảy ra." });
-        } finally {
-            setIsSubmitting(false);
-        }
+            // Nếu có lỗi mạng hoặc lỗi server 500
+            notification.error({ message: "Đã có lỗi xảy ra. Vui lòng kiểm tra lại giỏ hàng." });
+            setIsSubmitting(false); // Cho phép người dùng thử lại
+        } 
+        // Không cần finally ở đây nữa
     };
-    
+
     // Tính tổng tiền
     const totalPrice = cartItems.reduce((total, item) => total + (item.product.price * item.quantity), 0);
     const formattedTotalPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalPrice);
@@ -95,7 +103,7 @@ const CheckoutPage = () => {
                             <Form.Item label="Họ và tên" name="name" rules={[{ required: true, message: 'Vui lòng nhập họ tên!' }]}>
                                 <Input />
                             </Form.Item>
-                             <Row gutter={16}>
+                            <Row gutter={16}>
                                 <Col span={12}>
                                     <Form.Item label="Email" name="email" rules={[{ required: true, message: 'Vui lòng nhập email!' }]}>
                                         <Input disabled />
@@ -140,7 +148,7 @@ const CheckoutPage = () => {
                             <Text>Tạm tính</Text>
                             <Text>{formattedTotalPrice}</Text>
                         </div>
-                         <div className="summary-row">
+                        <div className="summary-row">
                             <Text>Phí vận chuyển</Text>
                             <Text>Miễn phí</Text>
                         </div>

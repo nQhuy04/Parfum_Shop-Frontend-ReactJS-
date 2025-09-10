@@ -1,13 +1,11 @@
 // src/components/layout/header.jsx
 
-import React from 'react';
-import { useContext } from 'react';
+import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Badge, Dropdown, Menu } from 'antd'; 
 import { ShoppingCartOutlined, UserOutlined, LogoutOutlined, HistoryOutlined } from '@ant-design/icons';
 import { AuthContext } from '../context/auth.context';
 import { CartContext } from '../context/cart.context';
-
 import '../../styles/header.css';
 
 const Header = () => {
@@ -17,32 +15,43 @@ const Header = () => {
 
     const totalItemsInCart = cartItems.reduce((total, item) => total + item.quantity, 0);
 
+    // Logic Đăng xuất không thay đổi
     const handleLogout = () => {
-        // ... logic logout giữ nguyên ...
+        localStorage.removeItem("access_token");
+        setAuth({
+            isAuthenticated: false,
+            user: { email: "", name: "", role: "" }
+        });
+        navigate("/");
     };
 
-    // 2. TẠO RA NỘI DUNG CHO DROPDOWN MENU
-    const userMenu = (
-        <Menu>
-            <Menu.Item key="profile">
-                <Link to="/user/profile">
-                    <UserOutlined style={{ marginRight: '8px' }} />
-                    Thông tin tài khoản
-                </Link>
-            </Menu.Item>
-            <Menu.Item key="order_history">
-                <Link to="/user/orders">
-                    <HistoryOutlined style={{ marginRight: '8px' }} />
-                    Lịch sử đơn hàng
-                </Link>
-            </Menu.Item>
-            <Menu.Divider /> {/* Đường kẻ phân cách */}
-            <Menu.Item key="logout" onClick={handleLogout}>
-                <LogoutOutlined style={{ marginRight: '8px' }} />
-                Đăng xuất
-            </Menu.Item>
-        </Menu>
-    );
+    // === CHUYỂN SANG SỬ DỤNG CÚ PHÁP `items` ĐỂ FIX LỖI ===
+    const menuItems = [
+        {
+            key: 'profile',
+            label: (
+                <Link to="/user/profile">Thông tin tài khoản</Link>
+            ),
+            icon: <UserOutlined />,
+        },
+        {
+            key: 'order_history',
+            label: (
+                <Link to="/user/orders">Lịch sử đơn hàng</Link>
+            ),
+            icon: <HistoryOutlined />,
+        },
+        {
+            type: 'divider', // Đây là cách tạo đường kẻ phân cách
+        },
+        {
+            key: 'logout',
+            label: 'Đăng xuất',
+            icon: <LogoutOutlined />,
+            onClick: handleLogout, // Gắn hàm onClick trực tiếp vào item object
+        },
+    ];
+
 
     return (
         <header className="main-header">
@@ -50,7 +59,6 @@ const Header = () => {
                 <nav className="header-nav">
                     <Link to="/">Trang chủ</Link>
                     <Link to="/products">Sản phẩm</Link>
-                    {/* <Link to="/about">Giới thiệu</Link> */}
                 </nav>
 
                 <div className="header-logo">
@@ -65,15 +73,14 @@ const Header = () => {
                     </Link>
                     
                     {auth.isAuthenticated ? (
-                        // 3. THAY THẾ LINK BẰNG DROPDOWN
-                        <Dropdown overlay={userMenu} placement="bottomRight" arrow>
-                            <div className="user-info action-item">
+                        // Component <Dropdown> giờ đây nhận vào <Menu /> với prop là `items`
+                        <Dropdown overlay={<Menu items={menuItems} />} placement="bottomRight" arrow>
+                            <div className="user-info action-item" style={{cursor: 'pointer'}}>
                                 <UserOutlined className="action-icon" style={{marginRight: '8px'}}/> 
                                 {auth.user.name}
                             </div>
                         </Dropdown>
                     ) : (
-                        // Phần chưa đăng nhập giữ nguyên
                         <>
                             <Link to="/login" className="action-item">Đăng nhập</Link>
                             <span className="separator">/</span>

@@ -73,14 +73,13 @@ const removeItemFromCartApi = (productId) => {
 
 const createOrderApi = (shippingAddress, items) => {
     const URL_API = "/v1/api/orders";
-    
-    // Tạo object data mới chứa cả 2 thông tin
+    // Dữ liệu gửi đi phải là một object chứa trực tiếp hai key
+    // `shippingAddress` và `items` để khớp với `req.body` ở backend
     const data = {
         shippingAddress: shippingAddress,
         items: items
     };
-    
-    return axios.post(URL_API, data); 
+    return axios.post(URL_API, data);
 }
 
 
@@ -89,6 +88,11 @@ const getMyOrdersApi = () => {
     return axios.get(URL_API);
 }
 
+
+const updateProfileApi = (data) => {
+    const URL_API = "/v1/api/users/me";
+    return axios.patch(URL_API, data);
+}
 
 
 // Cập nhật lại dòng export
@@ -105,4 +109,5 @@ export {
     removeItemFromCartApi, 
     createOrderApi,
     getMyOrdersApi,
+    updateProfileApi,
 }

@@ -46,35 +46,33 @@ const OrderHistoryPage = () => {
     if (isLoading) { /* ... */ }
     if (orders.length === 0) { /* ... */ }
 
-    return (
+   return (
         <div className="order-history-container">
             <Title level={2} style={{ marginBottom: '30px' }}>Lịch sử Đơn hàng</Title>
             {orders.map(order => (
                 <div className="order-card" key={order._id}>
+                    {/* Phần header card không đổi */}
                     <div className="order-card-header">
-                        <div>
-                            <Text strong>Đơn hàng: #{order._id.slice(-6).toUpperCase()}</Text><br />
-                            <Text type="secondary">Ngày đặt: {formatDate(order.createdAt)}</Text>
-                        </div>
-                        <Tag color={order.status === 'pending' ? 'gold' : 'green'}>{order.status}</Tag>
+                        {/* ... */}
                     </div>
+
                     <div className="order-card-body">
                         {order.items.map(item => (
-                            <div className="product-item-in-order" key={item._id}>
+                            <div className="product-item-in-order" key={item.product?._id || item._id}>
                                 <Image src={item.product?.image} width={80} preview={false} />
                                 <div>
                                     <Text strong>{item.product?.name ?? "Sản phẩm không còn tồn tại"}</Text><br/>
                                     <Text type="secondary">{`Số lượng: ${item.quantity}`}</Text>
                                 </div>
                                 <div style={{ marginLeft: 'auto', textAlign: 'right' }}>
-                                    {/* Backend của bạn lưu giá tại thời điểm mua trong `item.price` */}
+                                    {/* SỬA 1: Đọc `item.price` đã được lưu */}
                                     <Text strong>{formatPrice(item.price)}</Text>
                                 </div>
                             </div>
                         ))}
                         <Divider />
                         
-                        {/* === PHẦN MỚI: HIỂN THỊ ĐỊA CHỈ GIAO HÀNG === */}
+                        {/* SỬA 2: Đọc thông tin từ `order.shippingAddress` */}
                         <Title level={5}>Thông tin giao hàng</Title>
                         <Paragraph>
                             <strong>Tên người nhận:</strong> {order.shippingAddress?.name}<br />
@@ -85,7 +83,7 @@ const OrderHistoryPage = () => {
                         <Divider />
 
                         <div style={{ textAlign: 'right' }}>
-                            {/* Backend của bạn lưu tổng tiền trong `order.totalAmount` */}
+                             {/* SỬA 3: Đọc `order.totalAmount` */}
                             <Title level={4}>Tổng cộng: {formatPrice(order.totalAmount)}</Title>
                         </div>
                     </div>

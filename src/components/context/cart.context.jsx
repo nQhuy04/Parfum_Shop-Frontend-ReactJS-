@@ -6,7 +6,7 @@ import { AuthContext } from './auth.context';
 // Tạo Context
 export const CartContext = createContext({
     cartItems: [],
-    fetchCart: () => {}
+    fetchCart: () => { }
 });
 
 // Tạo Provider Wrapper
@@ -30,13 +30,18 @@ export const CartWrapper = ({ children }) => {
         }
     };
 
+    const clearCartOnClient = () => {
+        setCartItems([]);
+    };
+
+
     // Tự động fetch giỏ hàng khi trạng thái đăng nhập thay đổi (VD: khi user login)
     useEffect(() => {
         fetchCart();
     }, [auth.isAuthenticated]); // Chạy lại effect này mỗi khi user đăng nhập hoặc đăng xuất
 
     return (
-        <CartContext.Provider value={{ cartItems, fetchCart }}>
+        <CartContext.Provider value={{ cartItems, fetchCart, clearCartOnClient }}>
             {children}
         </CartContext.Provider>
     );

@@ -2,53 +2,77 @@
 
 .cart-page-container {
     max-width: 1200px;
-    margin: 80px auto;
+    margin: 60px auto;
     padding: 0 15px;
 }
 
-.cart-item {
+/* === BẢNG GIỎ HÀNG (Thay cho layout cũ) === */
+
+/* Tạo header cho bảng (Sản phẩm, Giá, etc.) */
+.cart-table-header {
     display: flex;
-    gap: 20px;
+    padding: 15px 0;
+    border-bottom: 2px solid var(--color-dark);
+    font-weight: 500;
+    color: var(--color-dark);
+}
+
+/* Các hàng chứa sản phẩm */
+.cart-table-row {
+    display: flex;
     align-items: center;
-    padding: 20px 0;
+    padding: 25px 0;
     border-bottom: 1px solid #f0f0f0;
 }
 
-.cart-item-image img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 8px;
-}
-
-.cart-item-details {
-    flex-grow: 1; /* Cho phép phần này chiếm hết không gian còn lại */
-}
-
-.cart-item-actions {
+/* Định nghĩa chiều rộng cho từng cột */
+.cart-col-product {
+    flex: 0 0 50%; /* Chiếm 50% chiều rộng */
     display: flex;
     align-items: center;
     gap: 20px;
 }
+.cart-col-price, .cart-col-quantity, .cart-col-subtotal {
+    flex: 0 0 15%; /* Mỗi cột chiếm 15% */
+    text-align: center;
+}
+.cart-col-remove {
+    flex: 0 0 5%; /* Cột xóa chiếm 5% */
+    text-align: right;
+}
 
+/* Kích thước ảnh mới, nhỏ gọn hơn */
+.cart-product-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #f0f0f0;
+}
+
+.cart-product-info .product-name {
+    font-weight: 500;
+}
+
+/* Nút xóa sản phẩm */
 .remove-button {
     font-size: 1.2rem;
     cursor: pointer;
     color: #999;
     transition: color 0.3s ease;
 }
-
 .remove-button:hover {
     color: #ff4d4f;
 }
 
-/* === Phần Tóm tắt Đơn hàng === */
+
+/* === Phần Tóm tắt Đơn hàng (giữ nguyên nhưng có thể chỉnh lại) === */
 .cart-summary {
     background-color: var(--color-light);
     padding: 30px;
     border-radius: 8px;
-    position: sticky; /* Giữ cố định khi cuộn */
-    top: 100px; /* Cách header 20px (80px header + 20px) */
+    position: sticky;
+    top: 100px;
 }
 
 .summary-row {

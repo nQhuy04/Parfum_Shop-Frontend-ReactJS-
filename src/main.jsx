@@ -27,6 +27,7 @@ import ProductsPage from './pages/ProductPage.jsx';
 import { LoadingContext, LoadingWrapper } from './components/context/loading.context.jsx';
 import CheckoutPage from './pages/CheckoutPage.jsx';
 import OrderHistoryPage from './pages/OrderHistoryPage.jsx';
+import UserProfilePage from './pages/UserProfilePage.jsx';
 
 
 // --- Cấu hình Router ---
@@ -43,6 +44,7 @@ const router = createBrowserRouter([
       { path: "products", element: <ProductsPage /> },
       { path: "checkout", element: <PageLoader><CheckoutPage /></PageLoader> },
       { path: "user/orders", element: <PageLoader><OrderHistoryPage /></PageLoader>},
+      { path: "user/profile", element: <PageLoader><UserProfilePage /></PageLoader> },
 
     ]
   },
