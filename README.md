@@ -2,7 +2,7 @@
 
 Chào mừng đến với giao diện người dùng của Parfum Shop, một trang web thương mại điện tử nước hoa được xây dựng bằng React.JS. Dự án này thể hiện một luồng mua sắm hoàn chỉnh, giao diện hiện đại, và được tối ưu hóa cho trải nghiệm người dùng.
 
-> Đây là phần Frontend của một dự án Full-stack. Vui lòng tham khảo repository của Backend tại đây: `[Link tới repo Backend của bạn]`
+> Đây là phần Frontend của một dự án Full-stack. Vui lòng tham khảo repository của Backend tại đây: https://github.com/nQhuy04/Parfum_Shop-Backend-NodeJS-
 
 ## ✨ Các Tính Năng Nổi Bật
 
