@@ -31,10 +31,10 @@ import CheckoutPage from './pages/CheckoutPage.jsx';
 import OrderHistoryPage from './pages/OrderHistoryPage.jsx';
 import UserProfilePage from './pages/UserProfilePage.jsx';
 import AdminProductsManager from './pages/admin/AdminProductsManager.jsx';
+import AdminOrdersManager from './pages/admin/AdminOrdersManager.jsx';
 
 // Tạm thời tạo các component rỗng còn lại
 const AdminDashboard = () => <div><h2>Chào mừng đến với Trang quản trị</h2><p>Chọn một mục từ sidebar để bắt đầu.</p></div>;
-const AdminOrdersManager = () => <div>Trang Quản lý Đơn hàng</div>;
 
 
 // --- Cấu hình Router ---

@@ -122,6 +122,19 @@ const deleteUserApi = (userId) => {
 }
 
 
+// 1. Lấy tất cả đơn hàng (Admin)
+const getAllOrdersApi = () => {
+    const URL_API = "/v1/api/orders"; 
+    return axios.get(URL_API);
+}
+
+// 2. Cập nhật trạng thái đơn hàng (Admin)
+const updateOrderStatusApi = (orderId, status) => {
+    const URL_API = `/v1/api/orders/${orderId}/status`;
+    return axios.patch(URL_API, { status });
+}
+
+
 // Cập nhật lại dòng export
 export {
     createUserApi, 
@@ -141,4 +154,6 @@ export {
     updateProductApi,
     deleteProductApi,
     deleteUserApi,
+    getAllOrdersApi,
+    updateOrderStatusApi,
 }

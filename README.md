@@ -1,36 +1,58 @@
-# React 
-Template này được sử dụng cho video fullstack React/Nodejs JWT của tác giả Hỏi Dân IT (Eric)
+# Parfum Shop - Frontend (React.JS)
 
-### Môi trường chạy dự án: Node.js v20.14.0
-https://nodejs.org/download/release/v20.14.0/
+Chào mừng đến với giao diện người dùng của Parfum Shop, một trang web thương mại điện tử nước hoa được xây dựng bằng React.JS. Dự án này thể hiện một luồng mua sắm hoàn chỉnh, giao diện hiện đại, và được tối ưu hóa cho trải nghiệm người dùng.
 
-## Về tác giả
-Mọi thông tin về Tác giả Hỏi Dân IT, các bạn có thể tìm kiếm tại đây:
+> Đây là phần Frontend của một dự án Full-stack. Vui lòng tham khảo repository của Backend tại đây: `[Link tới repo Backend của bạn]`
 
-Website chính thức: https://hoidanit.vn/
+## ✨ Các Tính Năng Nổi Bật
 
-Youtube “Hỏi Dân IT” : https://www.youtube.com/@hoidanit
+### Giao diện Khách hàng:
+- **Trang chủ sống động:** Tích hợp Carousel Banner tự động chuyển ảnh, các section bán hàng (Bộ sưu tập, Sản phẩm nổi bật) được thiết kế hiện đại.
+- **Trải nghiệm mua sắm hoàn chỉnh:** Người dùng có thể xem danh sách sản phẩm, xem chi tiết, thêm vào giỏ hàng, và tiến hành thanh toán.
+- **Quản lý Giỏ hàng:** Giao diện giỏ hàng dạng bảng, cho phép cập nhật số lượng và xóa sản phẩm.
+- **Xác thực Người dùng:** Luồng Đăng ký / Đăng nhập an toàn, phân tách layout riêng để tối ưu chuyển đổi.
+- **Quản lý Tài khoản:** Người dùng có thể xem lại Lịch sử đơn hàng và cập nhật Thông tin cá nhân.
+- **Trải nghiệm Người dùng (UX) được tối ưu:**
+  - **Loading mượt mà:** Hiệu ứng loading overlay đẹp mắt xuất hiện khi tải dữ liệu và chuyển trang.
+  - **Nhất quán:** Toàn bộ trang web sử dụng hệ thống thiết kế đồng bộ từ font chữ, màu sắc đến layout.
 
-Tiktok “Hỏi Dân IT” :  https://www.tiktok.com/@hoidanit
+### Giao diện Admin:
+- **Phân quyền chặt chẽ:** Khu vực Admin được bảo vệ, chỉ tài khoản có vai trò `admin` mới có thể truy cập.
+- **Dashboard Quản trị:** Layout Admin chuyên nghiệp với Sidebar điều hướng.
+- **Quản lý Sản phẩm (CRUD):** Giao diện bảng cho phép Thêm, Sửa, Xóa sản phẩm một cách trực quan thông qua Modal Form.
+- **Quản lý Đơn hàng:** Xem toàn bộ đơn hàng, xem chi tiết, và cập nhật trạng thái đơn hàng (Chờ xử lý, Đang giao, Hoàn thành...).
+- **Quản lý Người dùng:** Xem danh sách và quản lý tài khoản người dùng.
 
-Fanpage “Hỏi Dân IT” : https://www.facebook.com/askITwithERIC/
+## 🚀 Công nghệ sử dụng
 
-Udemy Hỏi Dân IT: https://www.udemy.com/user/eric-7039/
+- **Thư viện giao diện:** [React.js](https://reactjs.org/) (sử dụng Vite.js)
+- **Quản lý State:** React Context API
+- **Routing:** React Router DOM v6
+- **Thư viện UI Component:** [Ant Design](https://ant.design/)
+- **Gọi API:** Axios (với Interceptors để tự động đính kèm JWT)
 
-===
+## 🛠️ Hướng dẫn cài đặt và chạy dự án
 
-Các bước cài đặt: (chế độ development)
-1. clone code
-2. cài đặt thư viện: npm i
-3. Update file .env.development (nếu cần thiết)
-4. Chạy dự án: npm run dev
+1. **Clone repository:**
+   ```bash
+   git clone https://github.com/your-username/parfum_shop_frontend.git
+   ```
 
-===
+2. **Cài đặt dependencies:**
+   ```bash
+   cd parfum_shop_frontend
+   npm install
+   ```
 
-Cách chạy tại chế độ production:
-1. clone code
-2. cài đặt thư viện: npm i
-3. Update file .env.production (nếu cần thiết)
-4. Build dự án: npm run build
-5. Chạy dự án: npm run preview
-# Parfum_Shop-Frontend-ReactJS-
+3. **Cấu hình biến môi trường:**
+   - Tạo một file `.env` ở thư mục gốc.
+   - Thêm vào biến sau để kết nối đến backend:
+     ```
+     VITE_BACKEND_URL=http://localhost:8080
+     ```
+
+4. **Chạy dự án:**
+   ```bash
+   npm run dev
+   ```
+   Dự án sẽ chạy tại `http://localhost:5173`.
