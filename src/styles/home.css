@@ -179,3 +179,52 @@
 .featured-tabs .ant-radio-button-wrapper:not(:first-child)::before {
     display: none;
 }
+
+.featured-products-carousel .slick-slide {
+    padding: 0 12px; /* Tạo khoảng cách 12px mỗi bên cho từng slide */
+}
+
+
+/* THAY THẾ KHỐI CSS CŨ CỦA BRANDS SECTION BẰNG KHỐI NÀY */
+
+/* --- Section Thương hiệu Nổi tiếng --- */
+.brands-section-wrapper {
+    background-color: #fff; /* Nền trắng */
+}
+
+/* Tạo lưới cho các logo */
+.brands-grid {
+    display: grid;
+    /* Luôn luôn tạo ra 6 cột có chiều rộng bằng nhau */
+    grid-template-columns: repeat(6, 1fr);
+    gap: 20px;
+}
+
+/* Style cho từng ô chứa logo */
+.brand-item {
+    border: 1px solid #e8e8e8;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 120px; /* Chiều cao cố định */
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.brand-item:hover {
+    border-color: #ddd;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.brand-item img {
+    max-width: 100%;
+    max-height: 1000px; /* Giới hạn chiều cao logo */
+    filter: grayscale(100%);
+    opacity: 0.6;
+    transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
+.brand-item:hover img {
+    filter: grayscale(0%);
+    opacity: 1;
+}

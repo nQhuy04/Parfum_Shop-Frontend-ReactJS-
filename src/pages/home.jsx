@@ -41,12 +41,12 @@ const CollectionsSection = () => (
                 <div className="collection-content"><h3 className="collection-title">Nước Hoa Nam</h3><Button>Khám phá</Button></div>
             </div>
             <div className="collection-card">
-                 <img src="https://xxivstore.com/wp-content/themes/yootheme/cache/98/byredo-985e7bf6.webp" alt="Nước hoa nữ" />
-                 <div className="collection-content"><h3 className="collection-title">Nước Hoa Nữ</h3><Button>Khám phá</Button></div>
+                <img src="https://xxivstore.com/wp-content/themes/yootheme/cache/98/byredo-985e7bf6.webp" alt="Nước hoa nữ" />
+                <div className="collection-content"><h3 className="collection-title">Nước Hoa Nữ</h3><Button>Khám phá</Button></div>
             </div>
             <div className="collection-card">
-                 <img src="https://xxivstore.com/wp-content/themes/yootheme/cache/61/dama-6166d964.webp" alt="Nước hoa unisex" />
-                 <div className="collection-content"><h3 className="collection-title">Nước Hoa Unisex</h3><Button>Khám phá</Button></div>
+                <img src="https://xxivstore.com/wp-content/themes/yootheme/cache/61/dama-6166d964.webp" alt="Nước hoa unisex" />
+                <div className="collection-content"><h3 className="collection-title">Nước Hoa Unisex</h3><Button>Khám phá</Button></div>
             </div>
         </div>
     </section>
@@ -57,7 +57,7 @@ const FeaturedProductsSection = ({ products }) => {
     const filteredProducts = products.filter(p => p.gender === filter);
 
     // Xử lý khi không có sản phẩm nào khớp bộ lọc
-    if(filteredProducts.length === 0) return null;
+    if (filteredProducts.length === 0) return null;
 
     return (
         <section className="container section">
@@ -67,11 +67,50 @@ const FeaturedProductsSection = ({ products }) => {
                 <Radio.Button value="women">Nước hoa nữ</Radio.Button>
                 <Radio.Button value="unisex">Unisex</Radio.Button>
             </Radio.Group>
-            <Carousel slidesPerRow={4} dots={false} arrows prevArrow={<LeftOutlined />} nextArrow={<RightOutlined />}>
+            <Carousel
+                className="featured-products-carousel"
+                slidesToShow={4}
+                dots={false}
+                arrows
+                prevArrow={<LeftOutlined />}
+                nextArrow={<RightOutlined />}
+            >
                 {filteredProducts.map(product => (
-                    <div key={product._id} style={{ padding: '0 12px' }}><ProductCard {...product} /></div>
+                    <div key={product._id}><ProductCard {...product} /></div>
                 ))}
             </Carousel>
+        </section>
+    );
+};
+
+
+const BrandsSection = () => {
+    const brands = [
+        'https://xxivstore.com/wp-content/uploads/2023/11/Nuoc-hoa-Clive-Christian.png',
+        'https://xxivstore.com/wp-content/uploads/2023/11/Nuoc-hoa-Xerjoff.png',
+        'https://xxivstore.com/wp-content/uploads/2024/11/Penhaligons.png',
+        'https://xxivstore.com/wp-content/uploads/2021/07/Nasomatto.png',
+        'https://xxivstore.com/wp-content/uploads/2024/01/logo-roja-parfum-1.png',
+        'https://xxivstore.com/wp-content/uploads/2022/04/Ormonde-Jayne.png',
+        'https://xxivstore.com/wp-content/uploads/2023/11/Nuoc-hoa-Ex-Nihilo.png',
+        'https://xxivstore.com/wp-content/uploads/2022/07/159133030_1044233219399119_4321418372070751780_n.png',
+        'https://xxivstore.com/wp-content/uploads/2021/03/nuoc-hoa-le-labo.png',
+        'https://xxivstore.com/wp-content/uploads/2021/03/nuoc-hoa-mfk.png',
+        'https://xxivstore.com/wp-content/uploads/2021/03/nuoc-hoa-by-kilian.png',
+        'https://xxivstore.com/wp-content/uploads/2025/03/Loewe-logo.png',
+    ];
+    return (
+        <section className="section brands-section-wrapper">
+            <div className="container">
+                <h2 className="section-title">Thương Hiệu Nổi Tiếng</h2>
+                <div className="brands-grid">
+                    {brands.map((logo, index) => (
+                        <div className="brand-item" key={index}>
+                            <img src={logo} alt={`Brand ${index}`} />
+                        </div>
+                    ))}
+                </div>
+            </div>
         </section>
     );
 };
@@ -111,9 +150,11 @@ const HomePage = () => {
                     <>
                         {/* Section 1: Bộ sưu tập */}
                         <CollectionsSection />
-                        
+
                         {/* Section 2: Sản phẩm nổi bật */}
                         <FeaturedProductsSection products={productList} />
+
+                        <BrandsSection />
 
                         {/* Section 3: Sản phẩm mới nhất */}
                         <section className="container section">

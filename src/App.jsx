@@ -20,8 +20,7 @@ function App() {
   useEffect(() => {
     const fetchAccount = async () => {
       // Chỉ fetch khi có token VÀ người dùng chưa được xác thực
-      if (localStorage.getItem("access_token") && !auth.isAuthenticated) {
-        showLoading(); // Bật loading
+      if (localStorage.getItem("access_token")) {
         const res = await getAccountApi();
 
         if (res && res.DT && res.DT.user) {
@@ -33,11 +32,8 @@ function App() {
               role: res.DT.user.role,
             },
           });
-        } else {
-          // Xử lý khi token không hợp lệ
-          localStorage.removeItem("access_token");
         }
-        hideLoading(); // Luôn tắt loading sau khi hoàn tất
+
       }
     };
 
@@ -45,7 +41,7 @@ function App() {
 
     // Thêm auth.isAuthenticated để useEffect chạy lại khi người dùng logout
     // Thêm các hàm vào dependency array là một thực hành tốt
-  }, [auth.isAuthenticated, setAuth, showLoading, hideLoading]);
+  }, []);
 
   return (
     <div className="app-container">

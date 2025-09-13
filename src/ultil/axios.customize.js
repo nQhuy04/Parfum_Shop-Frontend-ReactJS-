@@ -19,6 +19,7 @@ instance.interceptors.request.use(function (config) {
     // Do something before request is sent
     config.headers.Authorization = `Bearer ${localStorage.getItem("access_token")}`;//Gán API vào phần Header, chỉ cần sửa ở đây, không cần sửa tất cả các api khác
 
+    
     return config;
   }, function (error) {
     // Do something with request error
