@@ -6,7 +6,17 @@ import { Spin, notification, Typography, Tag, Image, Divider } from 'antd'; // T
 import { getMyOrdersApi } from '../ultil/api';
 import '../styles/order-history.css';
 
-const { Title, Text, Paragraph } = Typography; // Thêm Paragraph
+const { Title, Text, Paragraph } = Typography; 
+
+
+const statusMapping = {
+    pending:   { text: 'Chờ xử lý', color: 'gold' },
+    paid:      { text: 'Đã thanh toán', color: 'processing' },
+    shipped:   { text: 'Đang giao hàng', color: 'purple' },
+    completed: { text: 'Hoàn thành', color: 'success' },
+    cancelled: { text: 'Đã hủy', color: 'error' },
+};
+
 
 const OrderHistoryPage = () => {
     const [orders, setOrders] = useState([]);
@@ -16,9 +26,7 @@ const OrderHistoryPage = () => {
         const fetchOrders = async () => {
             try {
                 const res = await getMyOrdersApi();
-                console.log(">>> KIỂM TRA DỮ LIỆU ĐƠN HÀNG THÔ:", res);
                 if (res && res.EC === 0 && Array.isArray(res.DT)) {
-                    // Sắp xếp đơn hàng mới nhất lên đầu
                     setOrders(res.DT.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
                 } else {
                     notification.error({ message: res.EM || "Không thể tải lịch sử đơn hàng." });
@@ -42,9 +50,8 @@ const OrderHistoryPage = () => {
 
     const formatDate = (dateString) => new Date(dateString).toLocaleDateString('vi-VN');
     
-    // ... Phần loading và không có đơn hàng giữ nguyên ...
-    if (isLoading) { /* ... */ }
-    if (orders.length === 0) { /* ... */ }
+    if (isLoading) return <div style={{ textAlign: 'center', padding: '100px 0' }}><Spin size="large" /></div>;
+    if (orders.length === 0) return <div style={{ textAlign: 'center', padding: '100px 0' }}><Title level={3}>Bạn chưa có đơn hàng nào</Title></div>;
 
    return (
         <div className="order-history-container">
@@ -53,7 +60,15 @@ const OrderHistoryPage = () => {
                 <div className="order-card" key={order._id}>
                     {/* Phần header card không đổi */}
                     <div className="order-card-header">
-                        {/* ... */}
+                        <div>
+                            <Text strong>Đơn hàng: #{order._id.slice(-6).toUpperCase()}</Text><br />
+                            <Text type="secondary">Ngày đặt: {formatDate(order.createdAt)}</Text>
+                        </div>
+                    
+                        <Tag color={statusMapping[order.status]?.color || 'default'}>
+                            {(statusMapping[order.status]?.text || order.status).toUpperCase()}
+                        </Tag>
+
                     </div>
 
                     <div className="order-card-body">

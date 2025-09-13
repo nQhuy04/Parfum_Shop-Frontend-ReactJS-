@@ -2,11 +2,12 @@
 
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Row, Col, Image, Typography, Button, Spin, notification, InputNumber, Tag } from 'antd';
+import { Row, Col, Image, Typography, Button, Spin, notification, InputNumber, Divider, Card } from 'antd';
 import { getProductByIdApi, addToCartApi } from '../ultil/api';
 
 import { AuthContext } from '../components/context/auth.context';
 import { CartContext } from '../components/context/cart.context';
+import '../styles/product-detail.css';
 import '../styles/home.css';
 
 const { Title, Text, Paragraph } = Typography;
@@ -36,7 +37,7 @@ const ProductDetailPage = () => { // Tên component là ProductDetailPage
                     });
                 }
             } catch (error) {
-                 setProduct(null);
+                setProduct(null);
                 notification.error({
                     message: "Lỗi hệ thống",
                     description: "Đã có lỗi xảy ra. Vui lòng thử lại sau."
@@ -46,7 +47,7 @@ const ProductDetailPage = () => { // Tên component là ProductDetailPage
             }
         };
 
-        if(id) fetchProductDetail();
+        if (id) fetchProductDetail();
     }, [id]);
 
     const handleAddToCart = async () => {
@@ -79,7 +80,7 @@ const ProductDetailPage = () => { // Tên component là ProductDetailPage
             setIsAddingToCart(false);
         }
     };
-    
+
     if (isLoading) {
         return <div style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}><Spin size="large" /></div>;
     }
@@ -88,57 +89,65 @@ const ProductDetailPage = () => { // Tên component là ProductDetailPage
     }
 
     const formattedPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price);
-    
+
     return (
-        <div className="container" style={{ paddingTop: '80px', paddingBottom: '80px' }}>
+        <div className="container product-detail-container">
             <Row gutter={[48, 48]}>
-                <Col xs={24} md={12}>
-                     <Image
+                {/* --- Cột bên trái: Hình ảnh sản phẩm --- */}
+                <Col xs={24} lg={12}>
+                    <Image
                         width="100%"
                         src={product.image}
-                        preview={{ visible: false }}
-                        style={{ borderRadius: '8px', boxShadow: 'var(--box-shadow)' }}
+                        className="product-image-wrapper" // Dùng class để style
                     />
                 </Col>
-                <Col xs={24} md={12}>
-                    <Tag color="gold" style={{ marginBottom: '16px', textTransform: 'uppercase' }}>
-                        {product.brand}
-                    </Tag>
-                    <Title level={1} style={{ fontFamily: 'var(--font-heading)', marginBottom: '16px' }}>
-                        {product.name}
-                    </Title>
-                    <Title level={2} style={{ color: 'var(--color-primary)', marginBottom: '24px' }}>
-                        {formattedPrice}
-                    </Title>
-                    <Paragraph style={{ lineHeight: 1.7 }}>
+
+                {/* --- Cột bên phải: Thông tin chi tiết --- */}
+                <Col xs={24} lg={12}>
+                    {/* Bỏ Tag, thay bằng text */}
+                    <p className="product-info-brand">{product.brand}</p>
+
+                    <Title level={1} className="product-info-name">{product.name}</Title>
+                    <Title level={2} className="product-info-price">{formattedPrice}</Title>
+
+                    <Paragraph style={{ lineHeight: 1.7, marginBottom: '24px' }}>
                         {product.description}
                     </Paragraph>
-                    <div style={{ margin: '32px 0' }}>
-                        <Text strong>Số lượng:</Text>
-                        <InputNumber 
-                            min={1} 
-                            max={product.stock}
-                            defaultValue={1} 
-                            onChange={(value) => setQuantity(value)} 
-                            style={{ marginLeft: '16px' }}
-                        />
+
+                    {/* Nhóm thông tin meta lại */}
+                    <div className="product-info-meta">
+                        <Text><strong>Giới tính:</strong> <span style={{ textTransform: 'capitalize' }}>{product.gender}</span></Text>
+                        <Divider type="vertical" />
+                        <Text><strong>Tồn kho:</strong> {product.stock} sản phẩm</Text>
                     </div>
-                    <Button 
-                        type="primary" 
-                        size="large" 
-                        style={{ backgroundColor: 'var(--color-dark)', border: 'none' }}
-                        onClick={handleAddToCart}
-                        loading={isAddingToCart}
-                    >
-                        Thêm vào giỏ hàng
-                    </Button>
-                    <Text style={{ marginLeft: '24px', fontStyle: 'italic' }}>
-                        {`Còn lại: ${product.stock} sản phẩm`}
-                    </Text>
+
+                    {/* Khối hành động mua hàng */}
+                    <Card className="action-card">
+                        <div className="quantity-selector">
+                            <Text strong style={{ fontSize: '1rem' }}>Số lượng:</Text>
+                            <InputNumber
+                                min={1}
+                                max={product.stock}
+                                defaultValue={1}
+                                onChange={(value) => setQuantity(value)}
+                                size="large"
+                            />
+                        </div>
+                        <Button
+                            type="primary"
+                            size="large"
+                            block // Nút full-width trong card
+                            style={{ backgroundColor: 'var(--color-dark)', border: 'none', height: '50px', fontSize: '1rem' }}
+                            onClick={handleAddToCart}
+                            loading={isAddingToCart}
+                        >
+                            Thêm vào giỏ hàng
+                        </Button>
+                    </Card>
                 </Col>
             </Row>
         </div>
     );
 };
 
-export default ProductDetailPage; // Export tên component
+export default ProductDetailPage;

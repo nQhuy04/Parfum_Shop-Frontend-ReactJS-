@@ -1,0 +1,56 @@
+/* src/styles/product-detail.css */
+
+.product-detail-container {
+    padding-top: 80px;
+    padding-bottom: 80px;
+}
+
+.product-image-wrapper .ant-image-img {
+    border-radius: 8px;
+    box-shadow: var(--box-shadow);
+    border: 1px solid #f0f0f0;
+    cursor: zoom-in; /* Thay đổi con trỏ chuột khi di vào ảnh */
+}
+
+/* === Phần thông tin bên phải === */
+.product-info-brand {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #888;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.product-info-name {
+    font-family: var(--font-heading);
+    margin-bottom: 16px !important;
+}
+
+.product-info-price {
+    color: var(--color-primary);
+    margin-bottom: 24px !important;
+}
+
+.product-info-meta {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.product-info-meta strong {
+    color: var(--color-dark);
+}
+
+/* === Thẻ Action Card === */
+.action-card {
+    margin-top: 24px;
+    background-color: var(--color-light);
+    border: 1px solid #f0f0f0;
+}
+
+.action-card .quantity-selector {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
