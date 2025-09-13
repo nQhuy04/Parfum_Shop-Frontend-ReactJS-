@@ -1,62 +1,94 @@
 // src/pages/ProductsPage.jsx
 
-import React, { useState, useEffect } from 'react';
-import { Row, Col, Spin, notification, Typography, Input, Divider, Checkbox, Slider, Select, Pagination } from 'antd';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { Row, Col, notification, Typography, Divider, Radio, Slider, Select, Pagination, Empty } from 'antd'; 
 import { getProductsApi } from '../ultil/api';
 import ProductCard from '../components/ProductCard';
-
-// Import CSS riêng cho trang này
+import { LoadingContext } from '../components/context/loading.context';
+import debounce from 'lodash.debounce';
 import '../styles/products-page.css';
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
-// --- COMPONENT CON CHO SIDEBAR LỌC (TẠM THỜI CHỈ LÀ GIAO DIỆN) ---
-const FiltersSidebar = () => {
-    // Sau này, chúng ta sẽ thêm logic vào đây
-    const brands = ['Dior', 'Chanel', 'Versace', 'Gucci', 'Tom Ford']; // Dữ liệu giả
-    const genders = [
-        { label: 'Nam', value: 'men' },
-        { label: 'Nữ', value: 'women' },
-        { label: 'Unisex', value: 'unisex' }
-    ];
+// --- COMPONENT CON CHO SIDEBAR (ĐÃ NÂNG CẤP) ---
+const FiltersSidebar = ({ onFilterChange, availableBrands, searchParams }) => {
+
+    const handleRadioChange = (key, value) => {
+        const currentValue = searchParams.get(key);
+        // Nếu click lại nút đã chọn -> bỏ chọn
+        onFilterChange(key, currentValue === value ? null : value);
+    };
+    
+    // Đọc giá trị từ URL để set cho Slider
+    const minPrice = Number(searchParams.get('minPrice')) || 0;
+    const maxPrice = Number(searchParams.get('maxPrice')) || 20000000;
 
     return (
         <aside className="filters-sidebar">
             <div className="filter-group">
                 <Title level={5} className="filter-title">Thương hiệu</Title>
-                <Input.Search placeholder="Tìm thương hiệu..." style={{ marginBottom: 15 }} />
-                <Checkbox.Group options={brands} className="brand-list" />
+                <Radio.Group className="filter-radio-group" value={searchParams.get('brand')}>
+                    {availableBrands.map(brand => (
+                        <Radio.Button key={brand} value={brand} onClick={() => handleRadioChange('brand', brand)}>
+                            {brand}
+                        </Radio.Button>
+                    ))}
+                </Radio.Group>
             </div>
             <Divider />
             <div className="filter-group">
                 <Title level={5} className="filter-title">Giới tính</Title>
-                <Checkbox.Group options={genders} className="gender-list" />
+                <Radio.Group className="filter-radio-group" value={searchParams.get('gender')}>
+                    <Radio.Button value="men" onClick={() => handleRadioChange('gender', 'men')}>Nam</Radio.Button>
+                    <Radio.Button value="women" onClick={() => handleRadioChange('gender', 'women')}>Nữ</Radio.Button>
+                    <Radio.Button value="unisex" onClick={() => handleRadioChange('gender', 'unisex')}>Unisex</Radio.Button>
+                </Radio.Group>
             </div>
             <Divider />
             <div className="filter-group">
                 <Title level={5} className="filter-title">Giá cả</Title>
-                <Slider range defaultValue={[0, 5000000]} max={10000000} step={100000} />
+                <Slider
+                    range
+                    key={`${minPrice}-${maxPrice}`} // Thêm key để Slider tự reset
+                    defaultValue={[minPrice, maxPrice]}
+                    max={20000000} step={500000}
+                    onAfterChange={(values) => onFilterChange('price', values)}
+                    tooltip={{ formatter: (value) => `${(value / 1000000).toFixed(1)} triệu` }}
+                />
             </div>
         </aside>
     );
 };
 
 // --- COMPONENT CON CHO LƯỚI SẢN PHẨM VÀ PHÂN TRANG ---
-const ProductsGrid = ({ products }) => {
+const ProductsGrid = ({ productsToDisplay, onFilterChange }) => { // Thêm prop `onFilterChange`
     const [currentPage, setCurrentPage] = useState(1);
-    const pageSize = 8; // Hiển thị 8 sản phẩm mỗi trang
+    const pageSize = 12;
 
-    // Logic phân trang phía client
     const indexOfLastProduct = currentPage * pageSize;
     const indexOfFirstProduct = indexOfLastProduct - pageSize;
-    const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
+    const currentProducts = productsToDisplay.slice(indexOfFirstProduct, indexOfLastProduct);
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [productsToDisplay]);
+
+    if (productsToDisplay.length === 0) {
+        return <Empty description="Không tìm thấy sản phẩm nào phù hợp." />
+    }
 
     return (
         <div className="products-grid-container">
             <div className="products-header">
-                <p>Hiển thị {indexOfFirstProduct + 1}-{Math.min(indexOfLastProduct, products.length)} của {products.length} kết quả</p>
-                <Select defaultValue="default" style={{ width: 200 }}>
-                    <Select.Option value="default">Sắp xếp mặc định</Select.Option>
+                <p>Hiển thị {productsToDisplay.length} kết quả</p>
+                {/* Select giờ sẽ gọi hàm từ component cha */}
+                <Select 
+                    onChange={(value) => onFilterChange('sort', value)} 
+                    defaultValue="latest" 
+                    style={{ width: 200 }}
+                >
+                    <Select.Option value="latest">Mới nhất</Select.Option>
                     <Select.Option value="price-asc">Giá: Thấp đến Cao</Select.Option>
                     <Select.Option value="price-desc">Giá: Cao đến Thấp</Select.Option>
                 </Select>
@@ -71,56 +103,77 @@ const ProductsGrid = ({ products }) => {
             </Row>
 
             <div className="pagination-container">
-                <Pagination 
+                <Pagination
                     current={currentPage}
                     pageSize={pageSize}
-                    total={products.length}
+                    total={productsToDisplay.length} // total phải dựa trên productsToDisplay
                     onChange={(page) => setCurrentPage(page)}
-                    showSizeChanger={false} // Tạm thời ẩn chức năng đổi số lượng sản phẩm/trang
+                    showSizeChanger={false}
                 />
             </div>
         </div>
     );
 };
 
-// --- COMPONENT CHÍNH CỦA TRANG ---
+// --- COMPONENT CHÍNH ---
 const ProductsPage = () => {
-    const [allProducts, setAllProducts] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const [filteredProducts, setFilteredProducts] = useState([]);
+    const [uniqueBrands, setUniqueBrands] = useState([]);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const { showLoading, hideLoading } = useContext(LoadingContext);
+
+    // Chuyển sang useCallback để ổn định
+    const handleFilterChange = useCallback((key, value) => {
+        const newSearchParams = new URLSearchParams(searchParams);
+        if (key === 'price') {
+            newSearchParams.set('minPrice', value[0]);
+            newSearchParams.set('maxPrice', value[1]);
+        } else if (!value) {
+            newSearchParams.delete(key);
+        } else {
+            newSearchParams.set(key, value);
+        }
+        setSearchParams(newSearchParams);
+    }, [searchParams, setSearchParams]);
+
+
+    const debouncedFetch = useCallback(debounce((params) => {
+        showLoading();
+        const queryString = new URLSearchParams(params).toString();
+        getProductsApi(queryString ? `?${queryString}` : '')
+            .then(res => {
+                if (res && res.EC === 0) {
+                    setFilteredProducts(res.DT);
+                    // Lấy tất cả brand từ DB để hiển thị (ổn định hơn)
+                    if (uniqueBrands.length === 0) {
+                        getProductsApi().then(allRes => {
+                            if (allRes && allRes.EC === 0) {
+                                setUniqueBrands([...new Set(allRes.DT.map(p => p.brand))].sort());
+                            }
+                        })
+                    }
+                }
+            })
+            .catch(() => notification.error({ message: "Lỗi khi lọc sản phẩm." }))
+            .finally(() => hideLoading());
+    }, 400), [uniqueBrands]); // uniqueBrands giúp hàm chỉ tạo lại một lần
+
 
     useEffect(() => {
-        const fetchAllProducts = async () => {
-            try {
-                const res = await getProductsApi();
-                if (res && res.EC === 0 && Array.isArray(res.DT)) {
-                    setAllProducts(res.DT);
-                }
-            } catch (error) {
-                notification.error({
-                    message: "Lỗi hệ thống",
-                    description: "Không thể tải danh sách sản phẩm.",
-                });
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        fetchAllProducts();
-    }, []);
+        const currentParams = Object.fromEntries(searchParams.entries());
+        debouncedFetch(currentParams);
+    }, [searchParams, debouncedFetch]);
 
     return (
         <div className="products-page-layout">
-            {isLoading ? (
-                <div style={{ textAlign: 'center' }}><Spin size="large" /></div>
-            ) : (
-                <Row gutter={[32, 32]}>
-                    <Col xs={24} lg={6}>
-                        <FiltersSidebar />
-                    </Col>
-                    <Col xs={24} lg={18}>
-                        <ProductsGrid products={allProducts} />
-                    </Col>
-                </Row>
-            )}
+            <Row gutter={[48, 48]}>
+                <Col xs={24} lg={6}>
+                    <FiltersSidebar onFilterChange={handleFilterChange} availableBrands={uniqueBrands} searchParams={searchParams} />
+                </Col>
+                <Col xs={24} lg={18}>
+                    <ProductsGrid productsToDisplay={filteredProducts} onFilterChange={handleFilterChange} searchParams={searchParams} />
+                </Col>
+            </Row>
         </div>
     );
 };

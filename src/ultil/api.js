@@ -29,8 +29,8 @@ const getUsersApi = () => {
 }
 
 
-const getProductsApi = () => {
-    const URL_API = "/v1/api/products";
+const getProductsApi = (queryString = '') => {
+    const URL_API = `/v1/api/products${queryString}`;
     return axios.get(URL_API);
 }
 
