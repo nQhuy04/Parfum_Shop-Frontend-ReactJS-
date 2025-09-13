@@ -14,6 +14,7 @@ import PageLoader from './components/common/PageLoader';
 import AdminLayout from './components/layout/AdminLayout.jsx'; 
 import AdminRoute from './routes/AdminRoute.jsx';  
 
+
 // === CONTEXT WRAPPERS ===
 import { AuthWrapper } from './components/context/auth.context.jsx';
 import { CartWrapper } from './components/context/cart.context.jsx';
@@ -32,9 +33,8 @@ import OrderHistoryPage from './pages/OrderHistoryPage.jsx';
 import UserProfilePage from './pages/UserProfilePage.jsx';
 import AdminProductsManager from './pages/admin/AdminProductsManager.jsx';
 import AdminOrdersManager from './pages/admin/AdminOrdersManager.jsx';
+import AdminDashboard from './pages/admin/AdminDashboard.jsx';
 
-// Tạm thời tạo các component rỗng còn lại
-const AdminDashboard = () => <div><h2>Chào mừng đến với Trang quản trị</h2><p>Chọn một mục từ sidebar để bắt đầu.</p></div>;
 
 
 // --- Cấu hình Router ---

@@ -135,6 +135,11 @@ const updateOrderStatusApi = (orderId, status) => {
 }
 
 
+const getDashboardStatsApi = () => {
+    const URL_API = "/v1/api/stats/dashboard";
+    return axios.get(URL_API);
+}
+
 // Cập nhật lại dòng export
 export {
     createUserApi, 
@@ -156,4 +161,5 @@ export {
     deleteUserApi,
     getAllOrdersApi,
     updateOrderStatusApi,
+    getDashboardStatsApi,
 }
